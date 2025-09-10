@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.menu-collapse > summary::-webkit-details-marker { display: none; }
+
+.menu-chevron { @apply transition-transform; }
+.menu-collapse[open] .menu-chevron { transform: rotate(180deg); }
+
+.menu-collapse[open] > summary { @apply bg-blue-50 text-blue-700; }
+
+.nav-sublink { @apply block pl-8 pr-3 py-1.5 rounded-md text-sm text-slate-700 hover:bg-slate-100; }
+.active-sub { @apply bg-blue-100 text-blue-800; }
+
+:root {
+    --sidebar-w: 240px;
+    --sidebar-bg: #ffffff; /* xám đen */
+    --sidebar-fg: #000000; /* xám nhạt */
+    --sidebar-active: #b1c2f5;
+    --border: #e5e7eb;
+    --page-bg: #f8fafc;
+    --ink: #0f172a;
+} /* ------ SIDEBAR ------ */
+.__footer-container {
+    width: 100%;
+    height: 50px;
+    /* background: #000; */
+    border-top: 1px solid rgb(214, 214, 214);
+}
+.__footer-content {
+    margin-top: 8px;
+    padding-bottom: 8px;
+}
+
+footer {
+    display: block;
+    text-align: center;
+}
+
+.__footer-container .__footer-content p {
+    font-size: 14px;
+    color: gray;
+}
+.sidebar {
+    width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    color: var(--sidebar-fg);
+    position: sticky; /* bám trên cùng khi cuộn (desktop) */
+    top: 0;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 1000;
+}
+.brand {
+    font-weight: 700;
+    padding: 14px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+nav[aria-label="Chính"] {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 4px 4px;
+}
+.nav-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 10px 12px;
+    border-radius: 8px;
+}
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+.nav-link:focus-visible {
+    outline: 2px solid #93c5fd; /* xanh nhạt */
+    outline-offset: 2px;
+}
+.nav-link.active {
+    background: var(--sidebar-active);
+} /* ------ KHU VỰC NỘI DUNG ------ */
+.wrap {
+    flex: 1;
+    min-width: 0; /* tránh tràn ở nội dung rộng */
+    display: flex;
+    flex-direction: column;
+}
+/* Container flex để sidebar và nội dung nằm cạnh nhau */
+.app{
+  display: flex;
+  min-height: 100vh;
+  background: var(--page-bg);
+  color: var(--ink);
+}
+.__admin-panel-content{
+    padding: 4px;
+}
+.topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: #fff;
+    position: sticky;
+    top: 0;
+    /* z-index: 500; */
+}
+.menu-btn {
+    display: none; /* chỉ hiện ở mobile */
+    cursor: pointer;
+    padding: 8px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    user-select: none;
+}
+main {
+    padding: 24px 28px;
+} /* ------ RESPONSIVE: Mobile dùng checkbox hack, không cần JS ------ */
+#menu-toggle {
+    display: none;
+} /* input checkbox ẩn */
+@media (max-width: 960px) {
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100dvh;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+    }
+    .menu-btn {
+        display: inline-block;
+    } /* Khi checkbox được bật -> kéo sidebar vào */
+    #menu-toggle:checked ~ .sidebar {
+        transform: translateX(0);
+    } /* Tấm nền để đóng menu khi chạm ra ngoài (label for=menu-toggle) */
+    .backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 900;
+    }
+    #menu-toggle:checked ~ .backdrop {
+        display: block;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .sidebar {
+        transition: none;
+    }
+}
