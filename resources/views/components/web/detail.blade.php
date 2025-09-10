@@ -30,10 +30,11 @@
                 <!-- Thumbnail Images -->
                 <div class="grid grid-cols-5 gap-2">
                     @foreach ($product->images as $image)
-                    <div class="bg-gray-300 rounded aspect-square flex items-center justify-center">
-                        {{-- <span class="text-xs text-gray-500">1</span> --}}
-                        <img src="{{ asset('storage/' . $image->url) }}" alt="{{ $image->alt }}" class="w-full h-full object-contain">
-                    </div>
+                        <div class="bg-gray-300 rounded aspect-square flex items-center justify-center">
+                            {{-- <span class="text-xs text-gray-500">1</span> --}}
+                            <img src="{{ asset('storage/' . $image->url) }}" alt="{{ $image->alt }}"
+                                class="w-full h-full object-contain">
+                        </div>
                     @endforeach
                 </div>
             </div>
@@ -43,31 +44,53 @@
                 <div>
                     <h1 class="text-2xl lg:text-3xl font-bold mb-2">{{ $product->name }}</h1>
                     <div class="text-sm text-gray-600 space-y-1">
-                        <p><span class="font-medium">SKU:</span> MONKA-E75</p>
                         <p>
                             <span class="font-medium">BRAND:</span> {{ $product->brand ?? 'No Information' }}
                         </p>
                     </div>
                 </div>
 
-                <div class="text-3xl font-bold text-red-600">
-                    999.000đ
+                <div class="text-2xl font-bold text-red-600" id="variant-price">
+                    @if ($product->min_price)
+                        {{ number_format($product->min_price) }} - {{ number_format($product->max_price) }}
+                    @else
+                        Liên Hệ
+                    @endif
                 </div>
 
                 <div class="space-y-4">
-                    <div>
-                        <p class="font-medium mb-2">Tình Trạng: <span class="text-green-600">Còn hàng</span></p>
+                    <div id="variant-info">
+                        <p class="font-medium mb-2">
+                            Tình Trạng:
+                            @if ($product->total_stock > 0)
+                                <span class="text-green-600" id="variant-status">Còn hàng</span>
+                            @else
+                                <span class="text-red-600" id="variant-status">Hết hàng</span>
+                            @endif
+                        </p>
                     </div>
 
                     <div>
-                        <p class="font-medium mb-2">Màu:</p>
+                        <p class="font-medium mb-2">Loại:</p>
                         <div class="flex space-x-2">
-                            <div
-                                class="w-8 h-8 bg-gray-400 rounded border-2 border-gray-300 cursor-pointer hover:border-blue-500">
-                            </div>
-                            <div
-                                class="w-8 h-8 bg-gray-500 rounded border-2 border-gray-300 cursor-pointer hover:border-blue-500">
-                            </div>
+                            {{-- @for ($i = 1; $i <= count($product->variants); $i++)
+                                <div
+                                    class="w-8 h-8 bg-gray-400 rounded border-2 border-gray-300 cursor-pointer hover:border-blue-500">
+                                    <p class="">#{{$i}}</p>
+                                </div>
+                            @endfor --}}
+                            @foreach ($product->variants as $variant)
+                                <div class="variant-option border border-collapse rounded-sm border-slate-400 hover:cursor-pointer hover:bg-slate-200"
+                                    data-variant-id="{{ $variant->id }}">
+                                    <p class="px-4 py-2">
+                                        {{ implode(' - ', array_values($variant->option_value)) }}
+                                        {{-- Debug: Hiển thị stock --}}
+                                        <span class="text-xs text-gray-500">
+                                            (Tồn: {{ $variant->stockItems->sum('on_hand') }})
+                                        </span>
+                                    </p>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
 
@@ -174,50 +197,11 @@
             </div>
         </section>
 
-        <script>
-            // Simple quantity control
-            document.addEventListener('DOMContentLoaded', function() {
-                const minusBtn = document.querySelector('button:first-of-type');
-                const plusBtn = document.querySelector('button:last-of-type');
-                const quantityInput = document.querySelector('input[type="number"]');
-
-                minusBtn.addEventListener('click', function() {
-                    const currentValue = parseInt(quantityInput.value);
-                    if (currentValue > 1) {
-                        quantityInput.value = currentValue - 1;
-                    }
-                });
-
-                plusBtn.addEventListener('click', function() {
-                    const currentValue = parseInt(quantityInput.value);
-                    quantityInput.value = currentValue + 1;
-                });
-
-                // Color selection
-                document.querySelectorAll('.w-8.h-8').forEach(color => {
-                    color.addEventListener('click', function() {
-                        // Remove active class from all colors
-                        document.querySelectorAll('.w-8.h-8').forEach(c => c.classList.remove(
-                            'border-blue-500'));
-                        // Add active class to clicked color
-                        this.classList.add('border-blue-500');
-                    });
-                });
-
-                // Tab switching
-                document.querySelectorAll('nav button').forEach(tab => {
-                    tab.addEventListener('click', function() {
-                        // Remove active classes
-                        document.querySelectorAll('nav button').forEach(t => {
-                            t.classList.remove('border-blue-600', 'text-blue-600');
-                            t.classList.add('text-gray-500');
-                        });
-                        // Add active class to clicked tab
-                        this.classList.add('border-blue-600', 'text-blue-600');
-                        this.classList.remove('text-gray-500');
-                    });
-                });
-            });
-        </script>
     </main>
 @endsection
+
+@push('scripts')
+<script>
+
+</script>
+@endpush

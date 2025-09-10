@@ -24,6 +24,10 @@ class ProductVariant extends Model
     public function product(){
         return $this->belongsTo(Product::class);
     }
+
+    public function stockItems(){
+        return $this->hasMany(StockItem::class, 'variant_id');
+    }
     
     public function prices()
     {

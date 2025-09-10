@@ -30,6 +30,18 @@ class Product extends Model
             ->filter();
         return $prices->min();
     }
+    public function getMaxPriceAttribute()
+    {
+        $prices = $this->variants()
+            ->with('currentPrice')
+            ->get()
+            ->map(function ($variant) {
+                return $variant->currentPrice ? $variant->currentPrice->effective_price : 0;
+            })
+            ->filter();
+        return $prices->max();
+    }
+
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'product_category');
@@ -60,5 +72,17 @@ class Product extends Model
     public function getMainImageAttribute()
     {
         return $this->images()->orderBy('position')->first();
+    }
+    //trật lất
+    // public function getTotalStickAttribute(){
+    //     return $this->variants()->sum(function ($variant){
+    //         return $variant->stockItems->sum('on_hand');
+    //     });
+    // }
+    public function getTotalStockAttribute()
+    {
+        return $this->variants->sum(function ($variant) {
+            return $variant->stockItems->sum('on_hand');
+        });
     }
 }

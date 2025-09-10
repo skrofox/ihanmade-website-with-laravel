@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\WareHouseController;
 
 Route::get('/', [WebController::class, 'index'])->name('home');
 Route::get('/detail-product/{slug}', [WebController::class, 'detail'])->name('detail');
+Route::get('/api/variant/{id}', [WebController::class, 'info_variant'])->name('info_variant');
+Route::get('/debug-stock', [WebController::class, 'debugStock'])->name('debug_stock');
 
 Route::middleware(['auth', 'roleUser'])->group(function () {
 
