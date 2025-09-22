@@ -13,18 +13,18 @@ use App\Http\Controllers\Admin\WareHouseController;
 
 Route::get('/', [WebController::class, 'index'])->name('home');
 Route::get('/detail-product/{slug}', [WebController::class, 'detail'])->name('detail');
-Route::get('/api/variant/{id}', [WebController::class, 'info_variant'])->name('info_variant');
-Route::get('/debug-stock', [WebController::class, 'debugStock'])->name('debug_stock');
-
-Route::middleware(['auth', 'roleUser'])->group(function () {
-
-});
+Route::get('/product/variant/{id}', [WebController::class, 'info_variant'])->name('product.variant');
+Route::get('/search/', [WebController::class, 'search'])->name('search');
+// Route::get('/detail-product/{slug}/{sku}', [WebController::class, 'detail_variant'])->name('detail_variant');
+// Route::get('/debug-stock', [WebController::class, 'debugStock'])->name('debug_stock');
+// Route::middleware(['auth', 'roleUser'])->group(function () {
+// });
 
 Route::prefix('admin')->middleware(['auth', 'role'])->group(function () {
     //Admin route
     Route::get('/', [AdminController::class, 'index'])->name('admin_home');
     //User admin route
-    Route::prefix('user')->name('user_')->group(function () {
+    Route::prefix('/user')->name('user_')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
         Route::get('/create', [UserController::class, 'create'])->name('create');

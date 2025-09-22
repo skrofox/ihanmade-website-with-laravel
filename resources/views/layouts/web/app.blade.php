@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>
         @yield('title', 'Ihandmade.com - Shop Handmade Top 1 VN')
     </title>
@@ -18,15 +19,16 @@
 
 <body>
     @include('layouts.web.header')
+
     <div class="pt-32">
         @yield('content')
     </div>
 
     @include('layouts.web.footer')
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-    
+
     @stack('scripts')
 </body>
 

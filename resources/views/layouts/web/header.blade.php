@@ -41,13 +41,13 @@
                         d="M0 4.54673C0 2.03564 2.07211 0 4.62819 0H21.5399V0.00124069C28.9908 0.0998525 35 6.06429 35 13.4075C35 20.8123 28.8897 26.8151 21.3523 26.8151C18.6648 26.8151 16.1587 26.052 14.0463 24.7342L6.58815 31.9057C4.13431 34.2652 0 32.5573 0 29.1841V4.54673ZM11.5194 22.7055C9.15709 20.295 7.70452 17.0179 7.70452 13.4075C7.70452 12.5277 8.43056 11.8144 9.32619 11.8144C10.2218 11.8144 10.9479 12.5277 10.9479 13.4075C10.9479 19.0526 15.6061 23.6288 21.3523 23.6288C27.0985 23.6288 31.7567 19.0526 31.7567 13.4075C31.7567 7.76248 27.0985 3.18626 21.3523 3.18626H4.62819C3.86336 3.18626 3.24334 3.79536 3.24334 4.54673V29.1841C3.24334 29.7351 3.91866 30.014 4.31948 29.6286L11.5194 22.7055Z"
                         fill="url(#paint1_linear_9129_4680)" />
                     <defs>
-                        <linearGradient id="paint0_linear_9129_4680" x1="35" y1="1.89063" x2="1.11152" y2="33.4573"
-                            gradientUnits="userSpaceOnUse">
+                        <linearGradient id="paint0_linear_9129_4680" x1="35" y1="1.89063" x2="1.11152"
+                            y2="33.4573" gradientUnits="userSpaceOnUse">
                             <stop stop-color="#7C3AED" />
                             <stop offset="0.993738" stop-color="#4F46E5" />
                         </linearGradient>
-                        <linearGradient id="paint1_linear_9129_4680" x1="35" y1="1.89063" x2="1.11152" y2="33.4573"
-                            gradientUnits="userSpaceOnUse">
+                        <linearGradient id="paint1_linear_9129_4680" x1="35" y1="1.89063" x2="1.11152"
+                            y2="33.4573" gradientUnits="userSpaceOnUse">
                             <stop stop-color="#7C3AED" />
                             <stop offset="0.993738" stop-color="#4F46E5" />
                         </linearGradient>
@@ -122,7 +122,8 @@
                                 <p class="mt-1 text-gray-400">Speak directly to your customers</p>
                             </div>
                         </div>
-                        <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-white/5">
+                        <div
+                            class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-white/5">
                             <div
                                 class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-700/50 group-hover:bg-gray-700">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
@@ -141,7 +142,8 @@
                                 <p class="mt-1 text-gray-400">Your customers’ data will be safe and secure</p>
                             </div>
                         </div>
-                        <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-white/5">
+                        <div
+                            class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-white/5">
                             <div
                                 class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-700/50 group-hover:bg-gray-700">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
@@ -160,7 +162,8 @@
                                 <p class="mt-1 text-gray-400">Connect with third-party tools</p>
                             </div>
                         </div>
-                        <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-white/5">
+                        <div
+                            class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-white/5">
                             <div
                                 class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-700/50 group-hover:bg-gray-700">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
@@ -208,23 +211,26 @@
             <a href="#" class="text-sm/6 font-semibold text-white">Marketplace</a>
             <a href="#" class="text-sm/6 font-semibold text-white">Benevolent</a>
             <div class="relative text-gray-600">
-                <input type="search" name="search" id="search" placeholder="Search"
-                    class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none">
-                <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
-                    <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
-                        viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;"
-                        xml:space="preserve" width="512px" height="512px">
-                        <path
-                            d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
-                    </svg>
-                </button>
+                <form action="{{ route('search') }}" method="get">
+                    <input type="search" name="query" id="search" placeholder="Search"
+                        class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none">
+                    <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
+                        <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
+                            viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;"
+                            xml:space="preserve" width="512px" height="512px">
+                            <path
+                                d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                        </svg>
+                    </button>
+                </form>
             </div>
         </el-popover-group>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-            @if (Auth::user())
-                <div class="relative group">
-                    <button type="button" class="flex items-center text-sm/6 font-semibold text-white focus:outline-none"
+            <div class="relative group">
+                @if (Auth::check())
+                    <button type="button"
+                        class="flex items-center text-sm/6 font-semibold text-white focus:outline-none"
                         id="user-menu-button">
                         <svg class="w-6 h-6 mr-2 text-white" fill="none" stroke="currentColor" stroke-width="1.5"
                             viewBox="0 0 24 24">
@@ -237,18 +243,21 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
+                @endif
+                @auth
                     <div class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-[#1f2937] rounded-md shadow-lg z-50 py-2 text-white"
                         id="user-dropdown-menu">
                         <a href="{{ route('profile.update') }}" class="block px-4 py-2 hover:bg-[#253040]">Profile</a>
                         <a href="" class="block px-4 py-2 hover:bg-[#253040]">Đơn hàng</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-[#253040]">Log out</button>
+                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-[#253040]">Log
+                                out</button>
                         </form>
                     </div>
-                </div>
-
-            @else
+                @endauth
+            </div>
+            @guest
                 <div class="max-w-max">
 
                     <a href="{{ route('login') }}" class="text-sm/6 font-semibold text-white">Log in
@@ -257,7 +266,7 @@
                     <a href="{{ route('register') }}" class="text-sm/6 font-semibold text-white">Register</a>
 
                 </div>
-            @endif
+            @endguest
         </div>
     </nav>
     <el-dialog>
@@ -284,25 +293,27 @@
                         <div class="-my-6 divide-y divide-white/10">
                             <div class="space-y-2 py-6">
                                 <div class="relative text-gray-600 flex">
-                                    <input type="search" name="search" id="search" placeholder="Search"
-                                        class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full">
-                                    <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
-                                        <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px"
-                                            y="0px" viewBox="0 0 56.966 56.966"
-                                            style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve"
-                                            width="512px" height="512px">
-                                            <path
-                                                d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
-                                        </svg>
-                                    </button>
+                                    <form action="{{ route('search') }}" method="get">
+                                        <input type="text" name="query" id="search" placeholder="Search"
+                                            class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full">
+                                        <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
+                                            <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                                xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1"
+                                                x="0px" y="0px" viewBox="0 0 56.966 56.966"
+                                                style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve"
+                                                width="512px" height="512px">
+                                                <path
+                                                    d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                                            </svg>
+                                        </button>
+                                    </form>
                                 </div>
                                 <div class="-mx-3">
                                     <button type="button" command="--toggle" commandfor="products"
                                         class="flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-white hover:bg-white/5">
                                         Product
-                                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true"
-                                            class="size-5 flex-none in-aria-expanded:rotate-180">
+                                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon"
+                                            aria-hidden="true" class="size-5 flex-none in-aria-expanded:rotate-180">
                                             <path
                                                 d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
                                                 clip-rule="evenodd" fill-rule="evenodd" />
@@ -335,7 +346,7 @@
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Company</a>
                             </div>
                             <div class="py-6">
-                                @if(Auth::user())
+                                @if (Auth::user())
                                     <form action="{{ route('logout') }}" method="post">
                                         @csrf
                                         <button type="submit"
@@ -357,28 +368,30 @@
         </dialog>
     </el-dialog>
 </header>
-<script>
-    // Hiển thị dropdown khi click, ẩn khi click ra ngoài
-    document.addEventListener('DOMContentLoaded', function () {
-        const btn = document.getElementById('user-menu-button');
-        const menu = document.getElementById('user-dropdown-menu');
-        let open = false;
+@push('scripts')
+    <script>
+        // Hiển thị dropdown khi click, ẩn khi click ra ngoài
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('user-menu-button');
+            const menu = document.getElementById('user-dropdown-menu');
+            let open = false;
 
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            open = !open;
-            if (open) {
-                menu.classList.remove('hidden');
-            } else {
-                menu.classList.add('hidden');
-            }
-        });
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                open = !open;
+                if (open) {
+                    menu.classList.remove('hidden');
+                } else {
+                    menu.classList.add('hidden');
+                }
+            });
 
-        document.addEventListener('click', function (e) {
-            if (!btn.contains(e.target) && !menu.contains(e.target)) {
-                menu.classList.add('hidden');
-                open = false;
-            }
+            document.addEventListener('click', function(e) {
+                if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.add('hidden');
+                    open = false;
+                }
+            });
         });
-    });
-</script>
+    </script>
+@endpush
