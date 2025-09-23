@@ -28,6 +28,11 @@ Route::middleware('auth')->group(function () {
     //
     Route::get('/cart', [WebController::class, 'cart'])->name('cart.index');
     Route::get('/checkout', [WebController::class, 'checkout'])->name('checkout.index');
+    //
+    Route::post('/checkout', [WebController::class, 'storeOrder'])->name('checkout.store');
+    Route::get('/checkout/success/{order}', [WebController::class, 'checkoutSuccess'])->name('checkout.success');
+    //
+    Route::post('/cart/update/{id}', [WebController::class, 'updateCart'])->name('cart.update');
 });
 
 Route::prefix('admin')->middleware(['auth', 'role'])->group(function () {

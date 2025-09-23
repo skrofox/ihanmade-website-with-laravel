@@ -7,9 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class OrderItem extends Model
 {
     protected $fillable = [
-        'order_id', 'product_id', 'variant_id',
-        'sku', 'name', 'qty', 'unit_price',
-        'discount_total', 'tax_total'
+        'order_id',
+        'product_id',
+        'variant_id',
+        'sku',
+        'name',
+        'qty',
+        'unit_price',
+        'discount_total',
+        'tax_total'
+    ];
+
+    protected $casts = [
+        'unit_price' => 'decimal:2',
+        'discount_total' => 'decimal:2',
+        'tax_total' => 'decimal:2',
     ];
 
     public function order()
@@ -27,4 +39,20 @@ class OrderItem extends Model
         return $this->belongsTo(ProductVariant::class);
     }
 
+    // Tính tổng tiền của item (số lượng x đơn giá)
+    public function getSubtotalAttribute()
+    {
+        return $this->qty * $this->unit_price;
+    }
+
+    // Format số tiền
+    public function getFormattedUnitPriceAttribute()
+    {
+        return number_format($this->unit_price, 0, ',', '.') . 'đ';
+    }
+
+    public function getFormattedSubtotalAttribute()
+    {
+        return number_format($this->subtotal, 0, ',', '.') . 'đ';
+    }
 }

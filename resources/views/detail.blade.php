@@ -107,8 +107,17 @@
                                     </div>
                                 @endforeach
                             </div>
-                            <input type="hidden" name="" id="variant-id" value="" hidden readonly
-                                class="hidden">
+                            <input type="hidden" name="" id="variant-id"
+                                value="{{ $product->variants->count() === 1 ? $product->variants->first()->id : '' }}"
+                                hidden readonly class="hidden">
+                            @auth
+                                <input type="hidden" name="" id="user-id" value="{{ auth()->user()->id }}" hidden
+                                    readonly class="hidden">
+                            @endauth
+                            @guest
+                                <input type="hidden" name="" id="user-id" value="no_login" hidden readonly
+                                    class="hidden">
+                            @endguest
                         </div>
 
                         <div id="quantity-input-container" class="flex items-center space-x-4">
@@ -358,6 +367,11 @@
 
                 const quantity = document.getElementById('quantity-input').value;
                 const variantId = document.getElementById('variant-id').value;
+                var user_id = document.getElementById('user-id').value;
+                if (user_id == 'no_login') {
+                    showToast("Vui lòng dăng nhập", "error");
+                    return;
+                }
                 if (!variantId) {
                     showToast("Vui lòng chọn loại hàng muốn thêm", "error");
                     return;
@@ -390,8 +404,8 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        showToast("Vui lòng chọn loại hàng muốn thêm", "error");
-                        // alert('Có lỗi xảy ra');
+                        // showToast("Vui lòng chọn loại hàng muốn thêm", "error");
+                        alert('Có lỗi xảy ra');
                     });
             });
 

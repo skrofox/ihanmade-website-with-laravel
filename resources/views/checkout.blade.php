@@ -1,5 +1,9 @@
 @extends('layouts.web.app')
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('title', 'Thanh toán - Ihandmade.com')
 
 @section('content')
@@ -13,6 +17,42 @@
             <span class="text-gray-400">/</span>
             <span class="text-gray-800 font-medium">Thanh toán</span>
         </nav>
+
+        <!-- Alert Messages -->
+        @if(session('error'))
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium">{{ session('error') }}</p>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        @if($errors->any())
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium">Có lỗi xảy ra:</h3>
+                    <ul class="mt-2 text-sm list-disc list-inside">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+        @endif
 
         <!-- Progress Steps -->
         <div class="mb-8">
@@ -40,7 +80,7 @@
             </div>
         </div>
 
-        <form action="" method="POST" id="checkout-form">
+        <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form">
             @csrf
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Checkout Form -->
@@ -53,24 +93,36 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Họ và tên *</label>
                                 <input type="text" 
                                        name="full_name" 
+                                       value="{{ old('full_name', Auth::user()->name ?? '') }}"
                                        required
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('full_name') border-red-500 @enderror"
                                        placeholder="Nhập họ và tên">
+                                @error('full_name')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại *</label>
                                 <input type="tel" 
                                        name="phone" 
+                                       value="{{ old('phone') }}"
                                        required
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('phone') border-red-500 @enderror"
                                        placeholder="Nhập số điện thoại">
+                                @error('phone')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="md:col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                                 <input type="email" 
                                        name="email"
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       value="{{ old('email', Auth::user()->email) }}"
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('email') border-red-500 @enderror"
                                        placeholder="Nhập email (tùy chọn)">
+                                @error('email')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -79,7 +131,7 @@
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-6">Địa chỉ giao hàng</h2>
                         <div class="space-y-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Tỉnh/Thành phố *</label>
                                     <select name="province" 
@@ -123,20 +175,23 @@
                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                            placeholder="Nhập mã bưu điện">
                                 </div>
-                            </div>
+                            </div> --}}
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Địa chỉ cụ thể *</label>
                                 <textarea name="address" 
                                           required
                                           rows="3"
-                                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                          placeholder="Nhập số nhà, tên đường..."></textarea>
+                                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('address') border-red-500 @enderror"
+                                          placeholder="Nhập số nhà, tên đường...">{{ old('address') }}</textarea>
+                                @error('address')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
 
                     <!-- Shipping Method -->
-                    <div class="bg-white rounded-lg shadow-sm p-6">
+                    {{-- <div class="bg-white rounded-lg shadow-sm p-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-6">Phương thức vận chuyển</h2>
                         <div class="space-y-3">
                             <label class="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
@@ -188,12 +243,15 @@
                                 </div>
                             </label>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <!-- Payment Method -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-6">Phương thức thanh toán</h2>
                         <div class="space-y-3">
+                            @error('payment_method')
+                                <p class="text-xs text-red-600">{{ $message }}</p>
+                            @enderror
                             <label class="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                                 <input type="radio" 
                                        name="payment_method" 
@@ -261,8 +319,11 @@
                         <h2 class="text-xl font-bold text-gray-800 mb-6">Ghi chú đơn hàng</h2>
                         <textarea name="notes" 
                                   rows="4"
-                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                  placeholder="Ghi chú thêm về đơn hàng (tùy chọn)"></textarea>
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('notes') border-red-500 @enderror"
+                                  placeholder="Ghi chú thêm về đơn hàng (tùy chọn)">{{ old('notes') }}</textarea>
+                        @error('notes')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
@@ -274,58 +335,47 @@
                             
                             <!-- Order Items -->
                             <div class="space-y-4 mb-6 max-h-64 overflow-y-auto">
+                                @foreach($cart->items as $item)
                                 <div class="flex items-center space-x-3 pb-3 border-b border-gray-100">
-                                    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100" 
-                                         alt="Product" 
-                                         class="w-12 h-12 object-cover rounded">
+                                    @if($item->variant->product->main_image)
+                                        <img src="{{ Storage::url($item->variant->product->main_image->url) }}" 
+                                             alt="{{ $item->variant->product->name }}" 
+                                             class="w-12 h-12 object-cover rounded">
+                                    @else
+                                        <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                                            <span class="text-gray-400 text-xs">No Image</span>
+                                        </div>
+                                    @endif
                                     <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-800 truncate">Bàn phím cơ Monka</p>
-                                        <p class="text-xs text-gray-600">Số lượng: 1</p>
+                                        <p class="text-sm font-medium text-gray-800 truncate">{{ $item->variant->product->name }}</p>
+                                        @if($item->variant->option_value_text !== 'Không có')
+                                            <p class="text-xs text-gray-600">{{ $item->variant->option_value_text }}</p>
+                                        @endif
+                                        <p class="text-xs text-gray-600">Số lượng: {{ $item->quantity }}</p>
                                     </div>
-                                    <p class="text-sm font-bold text-gray-800">999.000đ</p>
+                                    <p class="text-sm font-bold text-gray-800">{{ number_format($item->subtotal()) }}đ</p>
                                 </div>
-                                
-                                <div class="flex items-center space-x-3 pb-3 border-b border-gray-100">
-                                    <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=100" 
-                                         alt="Product" 
-                                         class="w-12 h-12 object-cover rounded">
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-800 truncate">Áo thun Number One Girl</p>
-                                        <p class="text-xs text-gray-600">Số lượng: 2</p>
-                                    </div>
-                                    <p class="text-sm font-bold text-gray-800">598.000đ</p>
-                                </div>
-                                
-                                <div class="flex items-center space-x-3 pb-3">
-                                    <img src="https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=100" 
-                                         alt="Product" 
-                                         class="w-12 h-12 object-cover rounded">
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-800 truncate">Túi tote canvas</p>
-                                        <p class="text-xs text-gray-600">Số lượng: 1</p>
-                                    </div>
-                                    <p class="text-sm font-bold text-gray-800">199.000đ</p>
-                                </div>
+                                @endforeach
                             </div>
                             
                             <!-- Order Total -->
                             <div class="space-y-3 mb-6">
                                 <div class="flex justify-between text-sm">
                                     <span class="text-gray-600">Tạm tính:</span>
-                                    <span class="font-medium">1.796.000đ</span>
+                                    <span class="font-medium">{{ number_format($cart->total) }}đ</span>
                                 </div>
-                                <div class="flex justify-between text-sm">
+                                {{-- <div class="flex justify-between text-sm">
                                     <span class="text-gray-600">Phí vận chuyển:</span>
                                     <span class="font-medium" id="shipping-cost">30.000đ</span>
-                                </div>
+                                </div> --}}
                                 <div class="flex justify-between text-sm">
                                     <span class="text-gray-600">Giảm giá:</span>
-                                    <span class="font-medium text-green-600">-50.000đ</span>
+                                    <span class="font-medium text-green-600">-0đ</span>
                                 </div>
                                 <hr class="my-3">
                                 <div class="flex justify-between text-lg font-bold">
                                     <span>Tổng cộng:</span>
-                                    <span class="text-red-600" id="final-total">1.776.000đ</span>
+                                    <span class="text-red-600" id="final-total">{{ number_format($cart->total) }}đ</span>
                                 </div>
                             </div>
 
@@ -334,8 +384,9 @@
                                 <label class="flex items-start">
                                     <input type="checkbox" 
                                            name="agree_terms" 
+                                           value="1"
                                            required
-                                           class="mt-1 w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                           class="mt-1 w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded @error('agree_terms') border-red-500 @enderror">
                                     <span class="ml-2 text-xs text-gray-600">
                                         Tôi đồng ý với 
                                         <a href="#" class="text-blue-600 hover:underline">Điều khoản sử dụng</a> 
@@ -343,13 +394,16 @@
                                         <a href="#" class="text-blue-600 hover:underline">Chính sách bảo mật</a>
                                     </span>
                                 </label>
+                                @error('agree_terms')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <!-- Place Order Button -->
-                            <button type="submit" 
-                                    class="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors mb-4">
-                                Đặt hàng ngay
-                            </button>
+                                <button type="submit" 
+                                        class="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors mb-4">
+                                    Đặt hàng ngay
+                                </button>
 
                             <!-- Back to Cart -->
                             <a href="{{ route('cart.index') }}" 
@@ -372,31 +426,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const shippingCostElement = document.getElementById('shipping-cost');
     const finalTotalElement = document.getElementById('final-total');
     
-    const baseTotal = 1796000;
-    const discount = 50000;
+    const baseTotal = {{ $cart->total }};
+    const discount = 0;
     
-    // Update shipping cost when method changes
-    shippingMethods.forEach(method => {
-        method.addEventListener('change', function() {
-            let shippingCost = 0;
-            switch(this.value) {
-                case 'standard':
-                    shippingCost = 30000;
-                    break;
-                case 'express':
-                    shippingCost = 50000;
-                    break;
-                case 'same_day':
-                    shippingCost = 80000;
-                    break;
-            }
-            
-            shippingCostElement.textContent = new Intl.NumberFormat('vi-VN').format(shippingCost) + 'đ';
-            
-            const finalTotal = baseTotal + shippingCost - discount;
-            finalTotalElement.textContent = new Intl.NumberFormat('vi-VN').format(finalTotal) + 'đ';
-        });
-    });
+    // Update shipping cost when method changes (currently disabled)
+    // shippingMethods.forEach(method => {
+    //     method.addEventListener('change', function() {
+    //         let shippingCost = 0;
+    //         const finalTotal = baseTotal + shippingCost - discount;
+    //         finalTotalElement.textContent = new Intl.NumberFormat('vi-VN').format(finalTotal) + 'đ';
+    //     });
+    // });
     
     // Form validation
     const form = document.getElementById('checkout-form');

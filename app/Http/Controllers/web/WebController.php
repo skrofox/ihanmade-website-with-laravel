@@ -8,8 +8,12 @@ use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class WebController extends Controller
@@ -57,7 +61,10 @@ class WebController extends Controller
             ], 404);
         }
 
-        $price = $variant->prices->first()->list_priced;
+        $priceModel = $variant->prices->first();
+
+        $price = $priceModel ? $priceModel->list_priced : 0;
+
 
         $variant_stock = $variant->stockItems->sum('on_hand');
 
@@ -176,11 +183,142 @@ class WebController extends Controller
 
     public function cart()
     {
-        return view('cart');
+        $cart = Cart::with(['items.variant', 'items.variant.currentPrice', 'items.variant.product', 'items.variant.product.images', 'items.variant.prices'])->where('user_id', Auth::id())->first();
+        // $cartItems = $cart->items;
+        $cartItems = $cart ? $cart->items : collect([]);
+        return view('cart', compact('cart', 'cartItems'));
+    }
+
+    public function updateCart(Request $request, $id)
+    {
+        $item = CartItem::findOrFail($id);
+
+        $valiated = $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $item->quantity = $valiated['quantity'];
+        $item->save();
+
+        return response()->json([
+            'success' => true,
+            'subtotal' => $item->subtotal(),
+            'cart_total' => $item->cart->total,
+        ]);
     }
 
     public function checkout()
     {
-        return view('checkout');
+        $cart = Cart::with(['items.variant', 'items.variant.currentPrice', 'items.variant.product', 'items.variant.product.images', 'items.variant.prices'])
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+            return redirect()->route('cart.index')->with('error', 'Giỏ hàng trống!');
+        }
+
+        return view('checkout', compact('cart'));
+    }
+
+    public function storeOrder(Request $request)
+    {
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'address' => 'required|string|max:500',
+            'payment_method' => 'required|string|in:cod,momo,bank_transfer,credit_card',
+            'notes' => 'nullable|string|max:1000',
+            'agree_terms' => 'required|accepted'
+        ]);
+
+        $cart = Cart::with(['items.variant', 'items.variant.currentPrice', 'items.variant.product'])
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+            return redirect()->route('cart.index')->with('error', 'Giỏ hàng trống!');
+        }
+
+        try {
+            DB::beginTransaction();
+
+        // Tạo địa chỉ giao hàng
+        $shippingAddress = Address::create([
+            'user_id' => Auth::id(),
+            'full_name' => $request->full_name,
+            'phone' => $request->phone,
+            'line1' => $request->address,
+            'line2' => null,
+            'ward' => null,
+            'district' => null,
+            'city' => null,
+            'province' => null,
+            'is_default_shipping' => false,
+            'is_default_billing' => false,
+        ]);
+
+        // Tính toán tổng tiền
+        $subtotal = $cart->total;
+        $shippingCost = 0; // Không tính phí ship
+        $discount = 0; // Có thể thêm logic tính discount sau
+        $tax = 0; // Không tính thuế
+        $grandTotal = $subtotal + $shippingCost - $discount + $tax;
+
+        // Tạo đơn hàng
+        $order = Order::create([
+            'user_id' => Auth::id(),
+            'email' => $request->email ?: Auth::user()->email,
+            'shipping_address_id' => $shippingAddress->id,
+            'billing_address_id' => $shippingAddress->id, // Tạm thời dùng chung địa chỉ
+            'status' => 'placed',
+            'subtotal' => $subtotal,
+            'discount_total' => $discount,
+            'shipping_total' => $shippingCost,
+            'tax_total' => $tax,
+            'grand_total' => $grandTotal,
+            'notes' => $request->notes,
+            'placed_at' => now(),
+        ]);
+
+        // Tạo các order items
+        foreach ($cart->items as $cartItem) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $cartItem->variant->product_id,
+                'variant_id' => $cartItem->variant_id,
+                'sku' => $cartItem->variant->sku,
+                'name' => $cartItem->variant->product->name . ' - ' . $cartItem->variant->option_value_text,
+                'qty' => $cartItem->quantity,
+                'unit_price' => $cartItem->unit_price_snapshot,
+                'discount_total' => 0,
+                'tax_total' => 0,
+            ]);
+        }
+
+        // Xóa giỏ hàng sau khi đặt hàng thành công
+        $cart->items()->delete();
+        $cart->delete();
+
+
+        DB::commit();
+
+        return redirect()->route('checkout.success', $order)->with('success', 'Đặt hàng thành công!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Checkout error: ' . $e->getMessage());
+            return back()->with('error', 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!');
+        }
+    }
+
+    public function checkoutSuccess(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $order->load(['items.product', 'shippingAddress']);
+
+        return view('checkout-success', compact('order'));
     }
 }

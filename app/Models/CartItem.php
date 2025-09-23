@@ -21,7 +21,7 @@ class CartItem extends Model
 
     //moi muc gan voi 1 bien the san pham
     public function variant(){
-        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
+        return $this->belongsTo(ProductVariant::class, 'variant_id');
     }
 
     // Tổng tiền của mục này

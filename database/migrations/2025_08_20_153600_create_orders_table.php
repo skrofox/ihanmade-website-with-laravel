@@ -28,6 +28,7 @@ return new class extends Migration
             $table->dateTime('paid_at')->nullable();
             $table->dateTime('cancelled_at')->nullable();
             $table->string('cancel_reason', 255)->nullable();
+            $table->mediumText('notes')->nullable();
             $table->timestamps();
         });
     }

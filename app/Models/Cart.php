@@ -16,14 +16,17 @@ class Cart extends Model
     }
 
     //tong tien gio hang
-    public function total(){
-        return $this->items->sum(function($item){
+    public function getTotalAttribute()
+    {
+        return $this->items->sum(function ($item) {
             return $item->unit_price_snapshot * $item->quantity;
         });
     }
 
+
     //Kiem tra gio hang co rong khong
-    public function isEmpty(){
+    public function isEmpty()
+    {
         return $this->items->count() === 0;
     }
 }

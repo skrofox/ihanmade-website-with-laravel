@@ -62,7 +62,7 @@ class Product extends Model
 
     public function images()
     {
-        return $this->hasMany(ProductImage::class);
+        return $this->hasMany(ProductImage::class, 'product_id');
     }
 
     public function prices()
@@ -71,6 +71,9 @@ class Product extends Model
     }
     public function getMainImageAttribute()
     {
+        // $image = $this->images()->orderBy('position')->first();
+        // return $image ? $image->path : null;
+
         return $this->images()->orderBy('position')->first();
     }
     //trật lất
