@@ -404,8 +404,8 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        // showToast("Vui lòng chọn loại hàng muốn thêm", "error");
-                        alert('Có lỗi xảy ra');
+                        showToast("Sản phẩm tạm ngừng bán", "error");
+                        // alert('Có lỗi xảy ra');
                     });
             });
 

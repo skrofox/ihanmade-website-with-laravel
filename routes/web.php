@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Web\WebController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\WareHouseController;
+use App\Http\Controllers\Admin\OrderController;
 
 Route::get('/', [WebController::class, 'index'])->name('home');
 Route::get('/search', [WebController::class, 'search'])->name('search');
@@ -121,6 +122,17 @@ Route::prefix('admin')->middleware(['auth', 'role'])->group(function () {
         Route::post('/{id}/adjust-stock', [StockItemsController::class, 'adjustStock'])->name('adjust_stock');
         Route::post('/{id}/reserve-stock', [StockItemsController::class, 'reserveStock'])->name('reserve_stock');
         Route::post('/{id}/release-reserved', [StockItemsController::class, 'releaseReservedStock'])->name('release_reserved');
+    });
+
+    //Order route
+    Route::prefix('order')->name('order_')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/pending', [OrderController::class, 'pending'])->name('pending');
+        Route::get('/processing', [OrderController::class, 'processing'])->name('processing');
+        Route::get('/search', [OrderController::class, 'search'])->name('search');
+        Route::get('/detail/{id}', [OrderController::class, 'show'])->name('detail');
+        Route::put('/update-status/{id}', [OrderController::class, 'updateStatus'])->name('update_status');
+        Route::delete('/{id}', [OrderController::class, 'destroy'])->name('destroy');
     });
 });
 
