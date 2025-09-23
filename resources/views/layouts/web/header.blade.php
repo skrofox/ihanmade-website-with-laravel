@@ -249,7 +249,7 @@
                         id="user-dropdown-menu">
                         <a href="{{ route('profile.update') }}" class="block px-4 py-2 hover:bg-[#253040]">Profile</a>
                         <a href="{{ route('cart.index') }}" class="block px-4 py-2 hover:bg-[#253040]">Giỏ hàng</a>
-                        <a href="" class="block px-4 py-2 hover:bg-[#253040]">Đơn hàng</a>
+                        <a href="{{ route('order.index') }}" class="block px-4 py-2 hover:bg-[#253040]">Đơn hàng</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="w-full text-left px-4 py-2 hover:bg-[#253040]">Log

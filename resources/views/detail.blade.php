@@ -102,6 +102,7 @@
                                             @endif
                                             <span class="text-xs text-gray-500">
                                                 (Tồn: {{ $variant->stockItems->sum('on_hand') }})
+                                                <input id="stock" type="hidden" name="stock" value="{{ $variant->stockItems->sum('on_hand') }}" class="hidden">
                                             </span>
                                         </p>
                                     </div>
@@ -262,15 +263,15 @@
                                     statusElement.classList.add('text-red-600');
 
                                     // Vô hiệu hóa nút
-                                    // document.getElementById('add-to-cart').disabled = true;
+                                    document.getElementById('add-to-cart').disabled = true;
                                     document.getElementById('buy-now').disabled = true;
 
                                     document.getElementById('quantity-input-container').classList
                                         .add('hidden');
 
                                     // Thêm style để phản ánh đã disabled (nếu muốn)
-                                    // document.getElementById('add-to-cart').classList.add(
-                                    //     'opacity-50', 'cursor-not-allowed');
+                                    document.getElementById('add-to-cart').classList.add(
+                                        'opacity-50', 'cursor-not-allowed');
                                     document.getElementById('buy-now').classList.add('opacity-50',
                                         'cursor-not-allowed');
 

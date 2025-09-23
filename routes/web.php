@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout/success/{order}', [WebController::class, 'checkoutSuccess'])->name('checkout.success');
     //
     Route::post('/cart/update/{id}', [WebController::class, 'updateCart'])->name('cart.update');
+
+    Route::get('order/', [WebController::class, 'order'])->name('order.index');
 });
 
 Route::prefix('admin')->middleware(['auth', 'role'])->group(function () {

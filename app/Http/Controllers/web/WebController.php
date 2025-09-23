@@ -321,4 +321,9 @@ class WebController extends Controller
 
         return view('checkout-success', compact('order'));
     }
+
+    public function order(){
+        $orders = Order::where('user_id', Auth::id())->orderBy('created_at', 'desc')->paginate(15);
+        return view('order', compact('orders'));
+    }
 }
