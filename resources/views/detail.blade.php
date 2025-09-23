@@ -92,11 +92,14 @@
                             <p class="font-medium mb-2">Loại:</p>
                             <div class="flex space-x-2">
                                 @foreach ($product->variants as $variant)
-                                    <div class="variant-option border border-collapse rounded-sm border-slate-400 hover:cursor-pointer hover:bg-slate-200 transition-colors varitant_{{ $variant->id }}"
+                                    <div class="variant-option border border-collapse rounded-sm border-slate-400 hover:cursor-pointer hover:bg-slate-200 transition-colors"
                                         data-variant-id="{{ $variant->id }}">
                                         <p class="px-4 py-2">
-                                            {{ implode(' - ', array_values($variant->option_value)) }}
-                                            {{-- Debug: Hiển thị stock --}}
+                                            @if (!empty($variant->option_value))
+                                                {{ implode(' - ', $variant->option_value) }}
+                                            @else
+                                                {{ $product->name }}
+                                            @endif
                                             <span class="text-xs text-gray-500">
                                                 (Tồn: {{ $variant->stockItems->sum('on_hand') }})
                                             </span>
@@ -104,6 +107,8 @@
                                     </div>
                                 @endforeach
                             </div>
+                            <input type="hidden" name="" id="variant-id" value="" hidden readonly
+                                class="hidden">
                         </div>
 
                         <div id="quantity-input-container" class="flex items-center space-x-4">
@@ -221,6 +226,7 @@
         </section>
 
     </main>
+    <div id="toast-container" class="fixed bottom-4 right-4 space-y-2 z-50"></div>
 
     @push('scripts')
         <script>
@@ -234,6 +240,9 @@
                             .then(res => res.json())
                             .then(data => {
                                 //update GIA
+                                //insert id variant
+                                document.getElementById('variant-id').value = data.id;
+
                                 document.getElementById('variant-price').innerText = data.price;
 
                                 const statusElement = document.getElementById('variant-status');
@@ -292,7 +301,6 @@
                     });
                 });
             });
-
             //làm mấy cái nút tăng, giảm số lượng
             document.addEventListener('DOMContentLoaded', () => {
                 const quantityInput = document.getElementById('quantity-input');
@@ -334,7 +342,7 @@
                     }
                 });
             });
-
+            //Chuyen dong ảnh đồ đó 
             document.addEventListener('DOMContentLoaded', () => {
                 const thumbnailImages = document.querySelectorAll('.thumbnail-image');
 
@@ -345,6 +353,88 @@
                     });
                 });
             });
+
+            document.getElementById('add-to-cart').addEventListener('click', () => {
+
+                const quantity = document.getElementById('quantity-input').value;
+                const variantId = document.getElementById('variant-id').value;
+                if (!variantId) {
+                    showToast("Vui lòng chọn loại hàng muốn thêm", "error");
+                    return;
+                }
+                const csrfToken = document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute('content');
+
+
+                fetch('/add-to-cart', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            quantity: quantity,
+                            variantId: variantId,
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // alert(data.message);
+                            showToast(data.message, "success");
+                        } else {
+                            showToast(data.message, "error");
+                            // alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast("Vui lòng chọn loại hàng muốn thêm", "error");
+                        // alert('Có lỗi xảy ra');
+                    });
+            });
+
+            function showToast(message, type = "success") {
+                const container = document.getElementById("toast-container");
+
+                const toast = document.createElement("div");
+                toast.className =
+                    "max-w-xs bg-white border border-gray-200 rounded-xl shadow-lg dark:bg-neutral-800 dark:border-neutral-700 animate-fade-in";
+                toast.setAttribute("role", "alert");
+                toast.innerHTML = `
+                    <div class="flex p-4 items-start">
+                        <div class="shrink-0 mt-0.5">
+                            ${
+                                type === "success"
+                                    ? `<svg class="size-4 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M7 10.5l5-5-1.5-1.5L7 7.5 5.5 6 4 7.5l3 3z"/></svg>`
+                                    : `<svg class="size-4 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.646 4.646 8 8l3.354-3.354 1.292 1.292L9.293 9.293l3.353 3.354-1.292 1.292L8 10.707l-3.354 3.232-1.292-1.292 3.353-3.354-3.353-3.354z"/></svg>`
+                            }
+                        </div>
+                        <div class="ms-3 text-sm text-gray-700 dark:text-neutral-200">
+                            ${message}
+                        </div>
+                        <button type="button" class="ms-auto text-gray-400 hover:text-gray-700 dark:hover:text-white">
+                            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M1 1l6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+
+                // append vào container
+                container.appendChild(toast);
+
+                // auto close sau 3s
+                const timeout = setTimeout(() => toast.remove(), 3000);
+
+                // close khi bấm nút
+                toast.querySelector("button").addEventListener("click", () => {
+                    clearTimeout(timeout);
+                    toast.remove();
+                });
+            }
         </script>
     @endpush
 @endsection

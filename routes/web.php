@@ -12,13 +12,23 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\WareHouseController;
 
 Route::get('/', [WebController::class, 'index'])->name('home');
+Route::get('/search', [WebController::class, 'search'])->name('search');
+Route::post('add-to-cart', [WebController::class, 'addToCart'])->name('add_to_cart');
 Route::get('/detail-product/{slug}', [WebController::class, 'detail'])->name('detail');
 Route::get('/product/variant/{id}', [WebController::class, 'info_variant'])->name('product.variant');
-Route::get('/search/', [WebController::class, 'search'])->name('search');
 // Route::get('/detail-product/{slug}/{sku}', [WebController::class, 'detail_variant'])->name('detail_variant');
 // Route::get('/debug-stock', [WebController::class, 'debugStock'])->name('debug_stock');
 // Route::middleware(['auth', 'roleUser'])->group(function () {
 // });
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    //
+    Route::get('/cart', [WebController::class, 'cart'])->name('cart.index');
+    Route::get('/checkout', [WebController::class, 'checkout'])->name('checkout.index');
+});
 
 Route::prefix('admin')->middleware(['auth', 'role'])->group(function () {
     //Admin route
@@ -57,7 +67,7 @@ Route::prefix('admin')->middleware(['auth', 'role'])->group(function () {
         Route::delete('/{id}', [ProductController::class, 'destroy'])->name('destroy');
         Route::get('/trash', [ProductController::class, 'trash'])->name('trash');
         Route::post('/trash/{id}', [ProductController::class, 'restore'])->name('restore');
-        
+
         // Routes cho quản lý hình ảnh
         Route::post('/{id}/add-images', [ProductController::class, 'addImages'])->name('add_images');
         Route::delete('/{productId}/image/{imageId}', [ProductController::class, 'deleteImage'])->name('delete_image');
@@ -101,7 +111,7 @@ Route::prefix('admin')->middleware(['auth', 'role'])->group(function () {
         Route::post('/trash/{id}', [StockItemsController::class, 'restore'])->name('restore');
         Route::delete('/trash/{id}', [StockItemsController::class, 'forceDelete'])->name('force_delete');
         Route::get('/search', [StockItemsController::class, 'search'])->name('search');
-        
+
         // AJAX routes for stock management
         Route::post('/{id}/adjust-stock', [StockItemsController::class, 'adjustStock'])->name('adjust_stock');
         Route::post('/{id}/reserve-stock', [StockItemsController::class, 'reserveStock'])->name('reserve_stock');
@@ -113,10 +123,6 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+
 
 require __DIR__ . '/auth.php';

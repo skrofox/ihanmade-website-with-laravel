@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class WebController extends Controller
@@ -18,7 +21,7 @@ class WebController extends Controller
             ->orderBy("id", "desc")
             ->take(4)
             ->get();
-        
+
 
         //lay sp theo category
         $category = Category::find(1);
@@ -122,5 +125,62 @@ class WebController extends Controller
         $products = Product::where('name', 'LIKE', '%' . $query . '%')->get();
 
         return view('search', compact('products', 'query'));
+    }
+
+    public function addToCart(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng'
+            ], 401);
+        }
+
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $user = Auth::user();
+
+        $cart = Cart::firstOrCreate(
+            ['user_id' => $user->id],
+            ['note' => null],
+        );
+
+        $variant = ProductVariant::with('currentPrice')->findOrFail($request->variantId);
+        $priceUnit = $variant->currentPrice->effective_price;
+
+        $cartItem = CartItem::where('cart_id', $cart->id)
+            ->where('variant_id', $request->variantId)
+            ->first();
+
+        if ($cartItem) {
+            $cartItem->quantity += $request->input('quantity');
+            $cartItem->save();
+        } else {
+            $cartItem = new CartItem([
+                'cart_id'   => $cart->id,
+                'variant_id' => $request->variantId,
+                'quantity' => $request->quantity,
+                'unit_price_snapshot' => $priceUnit
+            ]);
+            $cartItem->save();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thêm sản phẩm vào giỏ hàng thành công.',
+            'cart_count' => $cart->items()->sum('quantity')
+        ]);
+    }
+
+    public function cart()
+    {
+        return view('cart');
+    }
+
+    public function checkout()
+    {
+        return view('checkout');
     }
 }
