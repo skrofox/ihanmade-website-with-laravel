@@ -8,7 +8,6 @@
         
         <form action="{{ route('variant_store') }}" method="POST" class="space-y-6">
             @csrf
-            
             <!-- Chọn sản phẩm -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
