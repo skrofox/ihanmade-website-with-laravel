@@ -67,10 +67,18 @@
                 </div> --}}
 
                 <div class="text-2xl font-bold text-red-600" id="variant-price">
-                    @if ($product->min_price)
-                        {{ number_format($product->min_price) }} VND - {{ number_format($product->max_price) }} VND
+                    @if ($product->variants->count() > 1)
+                        @if ($product->min_price)
+                            {{ number_format($product->min_price) }} VND - {{ number_format($product->max_price) }} VND
+                        @else
+                            Liên Hệ
+                        @endif
                     @else
-                        Liên Hệ
+                        @if ($product->min_price)
+                            {{ number_format($product->min_price) }} VND
+                        @else
+                            Liên Hệ
+                        @endif
                     @endif
                 </div>
 
@@ -91,22 +99,43 @@
                         <div>
                             <p class="font-medium mb-2">Loại:</p>
                             <div class="flex space-x-2">
-                                @foreach ($product->variants as $variant)
+                                @if ($product->variants->count() > 1)
+                                    @foreach ($product->variants as $variant)
+                                        <div class="variant-option border border-collapse rounded-sm border-slate-400 hover:cursor-pointer hover:bg-slate-200 transition-colors"
+                                            data-variant-id="{{ $variant->id }}">
+                                            <p class="px-4 py-2">
+                                                @if (!empty($variant->option_value))
+                                                    {{ implode(' - ', $variant->option_value) }}
+                                                @else
+                                                    {{ $product->name }}
+                                                @endif
+                                                <span class="text-xs text-gray-500">
+                                                    (Tồn: {{ $variant->stockItems->sum('on_hand') }})
+                                                    <input id="stock" type="hidden" name="stock"
+                                                        value="{{ $variant->stockItems->sum('on_hand') }}" class="hidden">
+                                                </span>
+                                            </p>
+                                        </div>
+                                    @endforeach
+                                @else
                                     <div class="variant-option border border-collapse rounded-sm border-slate-400 hover:cursor-pointer hover:bg-slate-200 transition-colors"
-                                        data-variant-id="{{ $variant->id }}">
+                                        data-variant-id="{{ $product->variants->first()->id }}">
                                         <p class="px-4 py-2">
-                                            @if (!empty($variant->option_value))
-                                                {{ implode(' - ', $variant->option_value) }}
+                                            @if (!empty($product->variants->first()->option_value))
+                                                {{ implode(' - ', $product->variants->first()->option_value) }}
                                             @else
                                                 {{ $product->name }}
                                             @endif
                                             <span class="text-xs text-gray-500">
-                                                (Tồn: {{ $variant->stockItems->sum('on_hand') }})
-                                                <input id="stock" type="hidden" name="stock" value="{{ $variant->stockItems->sum('on_hand') }}" class="hidden">
+                                                (Tồn: {{ $product->variants->first()->stockItems->sum('on_hand') }})
+                                                <input id="stock" type="hidden" name="stock"
+                                                    value="{{ $product->variants->first()->stockItems->sum('on_hand') }}"
+                                                    class="hidden">
                                             </span>
                                         </p>
                                     </div>
-                                @endforeach
+                                @endif
+
                             </div>
                             <input type="hidden" name="" id="variant-id"
                                 value="{{ $product->variants->count() === 1 ? $product->variants->first()->id : '' }}"
@@ -280,14 +309,14 @@
                                     statusElement.classList.add('text-green-600');
 
                                     // Bật lại nút
-                                    // document.getElementById('add-to-cart').disabled = false;
+                                    document.getElementById('add-to-cart').disabled = false;
                                     document.getElementById('buy-now').disabled = false;
 
                                     document.getElementById('quantity-input-container').classList
                                         .remove('hidden');
 
-                                    // document.getElementById('add-to-cart').classList.remove(
-                                    //     'opacity-50', 'cursor-not-allowed');
+                                    document.getElementById('add-to-cart').classList.remove(
+                                        'opacity-50', 'cursor-not-allowed');
                                     document.getElementById('buy-now').classList.remove(
                                         'opacity-50', 'cursor-not-allowed');
                                 }

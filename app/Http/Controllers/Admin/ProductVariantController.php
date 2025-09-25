@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Price;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\StockItem;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -16,27 +19,28 @@ class ProductVariantController extends Controller
     public function index(Request $request)
     {
         $query = ProductVariant::with('product');
-        
+
         // Tìm kiếm theo SKU hoặc barcode
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('sku', 'like', "%{$search}%")
-                  ->orWhere('barcode', 'like', "%{$search}%");
+                    ->orWhere('barcode', 'like', "%{$search}%");
             });
         }
-        
+
         // Lọc theo trạng thái
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        
+
         $variants = $query->orderByDesc('created_at')->paginate(15);
-        
+
         return view('admin.page.variant', compact('variants'));
     }
-    
-    public function detail($id) {
+
+    public function detail($id)
+    {
         $variant = ProductVariant::with('product')->findOrFail($id);
         return view('admin.page.variant.detail_variant', compact('variant'));
     }
@@ -62,6 +66,7 @@ class ProductVariantController extends Controller
             'barcode' => 'nullable|string|max:100|unique:product_variants,barcode',
             'option_keys' => 'nullable|array',
             'option_values' => 'nullable|array',
+            'price' => 'required|numeric|min:0',
             'status' => 'required|in:active,inactive',
         ], [
             'product_id.required' => 'Vui lòng chọn sản phẩm',
@@ -71,6 +76,8 @@ class ProductVariantController extends Controller
             'sku.max' => 'SKU không được vượt quá 100 ký tự',
             'barcode.unique' => 'Mã vạch đã tồn tại',
             'barcode.max' => 'Mã vạch không được vượt quá 100 ký tự',
+            'price.required' => 'Vui lòng nhập giá bán',
+            'price.min' => 'Giá biến thể phải lớn hơn 0',
             'status.required' => 'Vui lòng chọn trạng thái',
             'status.in' => 'Trạng thái không hợp lệ',
         ]);
@@ -82,32 +89,37 @@ class ProductVariantController extends Controller
                 $keys = $request->option_keys;
                 $values = $request->option_values;
                 $optionValue = [];
-                
+
                 for ($i = 0; $i < count($keys); $i++) {
                     if (!empty(trim($keys[$i])) && !empty(trim($values[$i]))) {
                         $optionValue[trim($keys[$i])] = trim($values[$i]);
                     }
                 }
-                
+
                 // Nếu không có option nào hợp lệ thì set null
                 if (empty($optionValue)) {
                     $optionValue = null;
                 }
             }
 
+
             // Tạo product variant
             $variant = ProductVariant::create([
                 'product_id' => $request->product_id,
-                'sku' => $request->sku,
+                'sku' => $request->sku . '-' . Carbon::now()->getTimestamp(),
                 'barcode' => $request->barcode ?: null,
                 'option_value' => $optionValue,
                 'status' => $request->status,
             ]);
 
+            $price = Price::create([
+                'variant_id' => $variant->id,
+                'list_priced' => $request->price,
+            ]);
+
             return redirect()
                 ->route('variant_index')
                 ->with('success', 'Tạo biến thể sản phẩm thành công!');
-
         } catch (\Exception $e) {
             return back()
                 ->withInput()
@@ -128,8 +140,9 @@ class ProductVariantController extends Controller
      */
     public function edit(string $id)
     {
-        $variant = ProductVariant::findOrFail($id);
+        $variant = ProductVariant::with('prices')->findOrFail($id);
         $products = Product::all();
+        // dd($variant);
         return view('admin.page.variant.edit_variant', compact('variant', 'products'));
     }
 
@@ -139,7 +152,7 @@ class ProductVariantController extends Controller
     public function update(Request $request, string $id)
     {
         $variant = ProductVariant::findOrFail($id);
-        
+
         // Validation
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -147,6 +160,7 @@ class ProductVariantController extends Controller
             'barcode' => 'nullable|string|max:100|unique:product_variants,barcode,' . $id,
             'option_keys' => 'nullable|array',
             'option_values' => 'nullable|array',
+            'price' => 'required|numeric|min:0',
             'status' => 'required|in:active,inactive',
         ], [
             'product_id.required' => 'Vui lòng chọn sản phẩm',
@@ -156,6 +170,8 @@ class ProductVariantController extends Controller
             'sku.max' => 'SKU không được vượt quá 100 ký tự',
             'barcode.unique' => 'Mã vạch đã tồn tại',
             'barcode.max' => 'Mã vạch không được vượt quá 100 ký tự',
+            'price.required' => 'Chưa nhập giá bán',
+            'price.min' => 'Giá biến thể phải lớn hơn 0',
             'status.required' => 'Vui lòng chọn trạng thái',
             'status.in' => 'Trạng thái không hợp lệ',
         ]);
@@ -167,13 +183,13 @@ class ProductVariantController extends Controller
                 $keys = $request->option_keys;
                 $values = $request->option_values;
                 $optionValue = [];
-                
+
                 for ($i = 0; $i < count($keys); $i++) {
                     if (!empty(trim($keys[$i])) && !empty(trim($values[$i]))) {
                         $optionValue[trim($keys[$i])] = trim($values[$i]);
                     }
                 }
-                
+
                 // Nếu không có option nào hợp lệ thì set null
                 if (empty($optionValue)) {
                     $optionValue = null;
@@ -189,10 +205,22 @@ class ProductVariantController extends Controller
                 'status' => $request->status,
             ]);
 
+            $price = Price::where('variant_id', $variant->id)->first();
+
+            if (!$price) {
+                $price = Price::create([
+                    'variant_id' => $variant->id,
+                    'list_priced' => $request->price,
+                ]);
+            } else {
+                $price->update([
+                    'list_priced' => $request->price,
+                ]);
+            }
+
             return redirect()
                 ->route('variant_index')
                 ->with('success', 'Cập nhật biến thể sản phẩm thành công!');
-
         } catch (\Exception $e) {
             return back()
                 ->withInput()
@@ -208,11 +236,10 @@ class ProductVariantController extends Controller
         try {
             $variant = ProductVariant::findOrFail($id);
             $variant->delete();
-            
+
             return redirect()
                 ->route('variant_index')
                 ->with('success', 'Xóa biến thể sản phẩm thành công!');
-                
         } catch (\Exception $e) {
             return redirect()
                 ->route('variant_index')

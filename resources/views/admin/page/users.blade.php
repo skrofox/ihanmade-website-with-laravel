@@ -25,7 +25,7 @@
                         <th class="px-4 py-3">Email</th>
                         <th class="px-4 py-3">Create at</th>
                         <th class="px-4 py-3">Update at</th>
-                        <th class="px-4 py-3 text-center">Delete</th>
+                        <th class="px-4 py-3 text-center">Khóa</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">

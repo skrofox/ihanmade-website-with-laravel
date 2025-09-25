@@ -54,7 +54,7 @@
                         </li>
                         <li>
                             <a class="nav-sublink {{ request()->routeIs('user_trash') ? 'active-sub' : '' }}"
-                                href="{{ route('user_trash') }}">User Trash</a>
+                                href="{{ route('user_trash') }}">User lock list</a>
                         </li>
                     </ul>
                 </details>
@@ -185,10 +185,10 @@
                             <a class="nav-sublink {{ request()->routeIs('stock_create') ? 'active-sub' : '' }}"
                                 href="{{ route('stock_create') }}">Add Stock Item</a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a class="nav-sublink {{ request()->routeIs('stock_trash') ? 'active-sub' : '' }}"
                                 href="{{ route('stock_trash') }}">Stock Items Trash</a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </details>
 

@@ -11,6 +11,18 @@
                 <span class="text-gray-400">/</span>
                 <span class="text-gray-800 font-medium">Giỏ hàng</span>
             </nav>
+            @if (session()->has('success'))
+                <div class="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Thành công!</strong>
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+            @if (session()->has('error'))
+                <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Lỗi!</strong>
+                    <span class="block sm:inline">{{ session('error') }}</span>
+                </div>
+            @endif
 
             @if ($cartItems->isEmpty())
                 <p>Giỏ hàng trống.</p>
@@ -48,9 +60,13 @@
                                                         </h3>
                                                         <p class="text-sm text-gray-600 mb-2">{{ $item->variant->sku }}</p>
                                                         <div class="flex items-center space-x-4 text-sm text-gray-600">
-                                                            @foreach ($item->variant->option_value as $key => $value)
-                                                                <p>{{ $key }}: {{ $value }}</p><br>
-                                                            @endforeach
+                                                            @if ($item->variant->option_value)
+                                                                @foreach ($item->variant->option_value as $key => $value)
+                                                                    <p>{{ $key }}: {{ $value }}</p><br>
+                                                                @endforeach
+                                                            @else
+                                                                <p>{{ $item->variant->product->name }}</p>
+                                                            @endif
                                                         </div>
                                                         <p class="text-sm text-gray-600">Giá:
                                                             {{ number_format($item->unit_price_snapshot) }}đ
@@ -63,7 +79,6 @@
                                                             id="subtotal-{{ $item->id }}">
                                                             {{ number_format($item->unit_price_snapshot * $item->quantity) }}đ
                                                         </p>
-
                                                         <!-- Quantity Controls -->
                                                         <div class="flex items-center border rounded-lg">
                                                             <button class="p-2 hover:bg-gray-100 transition-colors"
@@ -75,10 +90,10 @@
                                                                 </svg>
                                                             </button>
                                                             <input type="number" value="{{ $item->quantity }}"
-                                                                min="1"
+                                                                min="1" max="{{ $item->variant->total_stock }}"
                                                                 class="w-16 text-center border-0 focus:ring-0"
                                                                 id="quantity-{{ $item->id }}"
-                                                                data-id="{{ $item->id }}">
+                                                                data-id="{{ $item->id }}" disabled>
                                                             <button class="p-2 hover:bg-gray-100 transition-colors"
                                                                 onclick="increaseQuantity({{ $item->id }})">
                                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor"
@@ -88,6 +103,16 @@
                                                                 </svg>
                                                             </button>
                                                         </div>
+                                                        <!-- Remove Item Button -->
+                                                        <form action="{{ route('cart.remove', $item->id) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="mt-2 text-sm text-red-600 hover:text-red-700"
+                                                                {{-- onclick="removeCartItem({{ $item->id }})" --}} id="removeCartItem" type="submit">
+                                                                Xóa
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
@@ -193,7 +218,9 @@
         function decreaseQuantity(id) {
             const input = document.getElementById(`quantity-${id}`);
             let currentValue = parseInt(input.value);
-            if (currentValue > 1) {
+            const minValue = parseInt(input.getAttribute('min')) || 1;
+
+            if (currentValue > minValue) {
                 currentValue -= 1;
                 updateQuantity(id, currentValue);
             }
@@ -202,70 +229,54 @@
         function increaseQuantity(id) {
             const input = document.getElementById(`quantity-${id}`);
             let currentValue = parseInt(input.value);
-            currentValue += 1;
-            updateQuantity(id, currentValue);
+            const maxValue = parseInt(input.getAttribute('max')) || Infinity;
+
+            if (currentValue < maxValue) {
+                currentValue += 1;
+                updateQuantity(id, currentValue);
+            }
         }
 
-        function updateTotal() {
-            // Calculate total logic here
-            console.log('Updating total...');
-        }
-
-        // Add smooth transitions
-        document.addEventListener('DOMContentLoaded', function() {
-            const deleteButtons = document.querySelectorAll('button[onclick*="delete"]');
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
-                        // Add delete logic here
-                        const cartItem = this.closest('.p-6');
-                        cartItem.style.opacity = '0.5';
-                        cartItem.style.transform = 'scale(0.95)';
-                        setTimeout(() => {
-                            cartItem.remove();
-                            updateTotal();
-                        }, 300);
-                    }
-                });
-            });
-        });
-
-        function updateQuantity(id, newQuantity) {
-            fetch(`cart/update/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        quantity: newQuantity
+        function removeCartItem(id) {
+            try {
+                fetch(`/cart/remove/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            id: id
+                        })
                     })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Cập nhật lại subtotal & total
-                        document.querySelector(`#quantity-${id}`).value = newQuantity;
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Lỗi mạng hoặc server không phản hồi!");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            // Xóa phần tử khỏi DOM
+                            const itemRow = document.getElementById(`cart-item-${id}`);
+                            if (itemRow) itemRow.remove();
 
-                        const subtotalEl = document.querySelector(`#subtotal-${id}`);
-                        if (subtotalEl) subtotalEl.textContent = data.subtotal.toLocaleString() + 'đ';
+                            // Cập nhật tổng giỏ hàng
+                            const totalEl = document.querySelector('#cart-total');
+                            if (totalEl) totalEl.textContent = data.cart_total.toLocaleString() + 'đ';
 
-                        const totalEl = document.querySelector('#cart-total');
-                        if (totalEl) totalEl.textContent = data.cart_total.toLocaleString() + 'đ';
-
-                        // update subtotal của item
-                        document.querySelector(`#subtotal-${id}`).textContent =
-                            data.subtotal.toLocaleString() + 'đ';
-
-                        // update tổng giỏ hàng
-                        document.querySelector('#cart-subtotal').textContent =
-                            data.cart_total.toLocaleString() + 'đ';
-                        document.querySelector('#cart-total').textContent =
-                            data.cart_total.toLocaleString() + 'đ';
-                    }
-                })
-                .catch(err => console.error(err));
+                            alert(data.message);
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Có lỗi khi xóa:", err);
+                        // alert("Không thể xóa sản phẩm. Vui lòng thử lại!");
+                    });
+            } catch (error) {
+                console.error("Lỗi rồi anh ơi:", error);
+            }
         }
     </script>
 @endpush

@@ -13,14 +13,21 @@ class CartItem extends Model
         'unit_price_snapshot'
     ];
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
 
     //Moi muc thuoc ve 1 gio hang
-    public function cart(){
+    public function cart()
+    {
         return $this->belongsTo(Cart::class);
     }
 
     //moi muc gan voi 1 bien the san pham
-    public function variant(){
+    public function variant()
+    {
         return $this->belongsTo(ProductVariant::class, 'variant_id');
     }
 
@@ -29,5 +36,4 @@ class CartItem extends Model
     {
         return $this->unit_price_snapshot * $this->quantity;
     }
-
 }

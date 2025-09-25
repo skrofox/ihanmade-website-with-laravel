@@ -183,9 +183,10 @@ class WebController extends Controller
 
     public function cart()
     {
-        $cart = Cart::with(['items.variant', 'items.variant.currentPrice', 'items.variant.product', 'items.variant.product.images', 'items.variant.prices'])->where('user_id', Auth::id())->first();
+        $cart = Cart::with(['items.variant', 'items.variant.currentPrice', 'items.variant.product', 'items.variant.product.images', 'items.variant.prices', 'items.variant.stockItems'])->where('user_id', Auth::id())->first();
         // $cartItems = $cart->items;
         $cartItems = $cart ? $cart->items : collect([]);
+        // dd($cartItems);
         return view('cart', compact('cart', 'cartItems'));
     }
 
@@ -243,67 +244,67 @@ class WebController extends Controller
         try {
             DB::beginTransaction();
 
-        // Tạo địa chỉ giao hàng
-        $shippingAddress = Address::create([
-            'user_id' => Auth::id(),
-            'full_name' => $request->full_name,
-            'phone' => $request->phone,
-            'line1' => $request->address,
-            'line2' => null,
-            'ward' => null,
-            'district' => null,
-            'city' => null,
-            'province' => null,
-            'is_default_shipping' => false,
-            'is_default_billing' => false,
-        ]);
-
-        // Tính toán tổng tiền
-        $subtotal = $cart->total;
-        $shippingCost = 0; // Không tính phí ship
-        $discount = 0; // Có thể thêm logic tính discount sau
-        $tax = 0; // Không tính thuế
-        $grandTotal = $subtotal + $shippingCost - $discount + $tax;
-
-        // Tạo đơn hàng
-        $order = Order::create([
-            'user_id' => Auth::id(),
-            'email' => $request->email ?: Auth::user()->email,
-            'shipping_address_id' => $shippingAddress->id,
-            'billing_address_id' => $shippingAddress->id, // Tạm thời dùng chung địa chỉ
-            'status' => 'placed',
-            'subtotal' => $subtotal,
-            'discount_total' => $discount,
-            'shipping_total' => $shippingCost,
-            'tax_total' => $tax,
-            'grand_total' => $grandTotal,
-            'notes' => $request->notes,
-            'placed_at' => now(),
-        ]);
-
-        // Tạo các order items
-        foreach ($cart->items as $cartItem) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $cartItem->variant->product_id,
-                'variant_id' => $cartItem->variant_id,
-                'sku' => $cartItem->variant->sku,
-                'name' => $cartItem->variant->product->name . ' - ' . $cartItem->variant->option_value_text,
-                'qty' => $cartItem->quantity,
-                'unit_price' => $cartItem->unit_price_snapshot,
-                'discount_total' => 0,
-                'tax_total' => 0,
+            // Tạo địa chỉ giao hàng
+            $shippingAddress = Address::create([
+                'user_id' => Auth::id(),
+                'full_name' => $request->full_name,
+                'phone' => $request->phone,
+                'line1' => $request->address,
+                'line2' => null,
+                'ward' => null,
+                'district' => null,
+                'city' => null,
+                'province' => null,
+                'is_default_shipping' => false,
+                'is_default_billing' => false,
             ]);
-        }
 
-        // Xóa giỏ hàng sau khi đặt hàng thành công
-        $cart->items()->delete();
-        $cart->delete();
+            // Tính toán tổng tiền
+            $subtotal = $cart->total;
+            $shippingCost = 0; // Không tính phí ship
+            $discount = 0; // Có thể thêm logic tính discount sau
+            $tax = 0; // Không tính thuế
+            $grandTotal = $subtotal + $shippingCost - $discount + $tax;
+
+            // Tạo đơn hàng
+            $order = Order::create([
+                'user_id' => Auth::id(),
+                'email' => $request->email ?: Auth::user()->email,
+                'shipping_address_id' => $shippingAddress->id,
+                'billing_address_id' => $shippingAddress->id, // Tạm thời dùng chung địa chỉ
+                'status' => 'placed',
+                'subtotal' => $subtotal,
+                'discount_total' => $discount,
+                'shipping_total' => $shippingCost,
+                'tax_total' => $tax,
+                'grand_total' => $grandTotal,
+                'notes' => $request->notes,
+                'placed_at' => now(),
+            ]);
+
+            // Tạo các order items
+            foreach ($cart->items as $cartItem) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $cartItem->variant->product_id,
+                    'variant_id' => $cartItem->variant_id,
+                    'sku' => $cartItem->variant->sku,
+                    'name' => $cartItem->variant->product->name . ' - ' . $cartItem->variant->option_value_text,
+                    'qty' => $cartItem->quantity,
+                    'unit_price' => $cartItem->unit_price_snapshot,
+                    'discount_total' => 0,
+                    'tax_total' => 0,
+                ]);
+            }
+
+            // Xóa giỏ hàng sau khi đặt hàng thành công
+            $cart->items()->delete();
+            $cart->delete();
 
 
-        DB::commit();
+            DB::commit();
 
-        return redirect()->route('checkout.success', $order)->with('success', 'Đặt hàng thành công!');
+            return redirect()->route('checkout.success', $order)->with('success', 'Đặt hàng thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Checkout error: ' . $e->getMessage());
@@ -322,8 +323,43 @@ class WebController extends Controller
         return view('checkout-success', compact('order'));
     }
 
-    public function order(){
+    public function order()
+    {
         $orders = Order::where('user_id', Auth::id())->orderBy('created_at', 'desc')->paginate(15);
         return view('order', compact('orders'));
+    }
+
+    public function removeCartItem($id)
+    {
+        try {
+            $cart = Cart::where('user_id', Auth::id())->first();
+
+            if ($cart) {
+                $cartItems = CartItem::where('id', $id)
+                    ->first();
+
+                $cartItems->delete();
+
+                // return response()->json([
+                //     'success' => true,
+                //     'message' => 'Xóa sản phẩm khỏi giỏ hàng thành công',
+                //     // 'cart_total' => $cartTotal
+                // ]);
+                return redirect()->route('cart.index')->with('success', 'Xóa sản phẩm khỏi giỏ hàng thành công');
+            } else {
+                // return response()->json([
+                //     'success' => false,
+                //     'message' => 'Giỏ hàng trống!',
+                // ], 400);
+                return redirect()->route('cart.index')->with('error', 'Giỏ hàng trống!');
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Xóa không thành công: ' . $th->getMessage(),
+            // ], 400);
+            return redirect()->route('cart.index')->with('error', 'Xóa không thành công: ' . $th->getMessage());
+        }
     }
 }
