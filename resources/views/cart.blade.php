@@ -215,6 +215,27 @@
 
 @push('scripts')
     <script>
+        // function decreaseQuantity(id) {
+        //     const input = document.getElementById(`quantity-${id}`);
+        //     let currentValue = parseInt(input.value);
+        //     const minValue = parseInt(input.getAttribute('min')) || 1;
+
+        //     if (currentValue > minValue) {
+        //         currentValue -= 1;
+        //         updateQuantity(id, currentValue);
+        //     }
+        // }
+
+        // function increaseQuantity(id) {
+        //     const input = document.getElementById(`quantity-${id}`);
+        //     let currentValue = parseInt(input.value);
+        //     const maxValue = parseInt(input.getAttribute('max')) || Infinity;
+
+        //     if (currentValue < maxValue) {
+        //         currentValue += 1;
+        //         updateQuantity(id, currentValue);
+        //     }
+        // }
         function decreaseQuantity(id) {
             const input = document.getElementById(`quantity-${id}`);
             let currentValue = parseInt(input.value);
@@ -222,7 +243,8 @@
 
             if (currentValue > minValue) {
                 currentValue -= 1;
-                updateQuantity(id, currentValue);
+                input.value = currentValue;
+                updateQuantity(id);
             }
         }
 
@@ -233,8 +255,41 @@
 
             if (currentValue < maxValue) {
                 currentValue += 1;
-                updateQuantity(id, currentValue);
+                input.value = currentValue;
+                updateQuantity(id);
             }
+        }
+
+
+        function updateQuantity(id) {
+            const quantity = document.getElementById(`quantity-${id}`).value;
+            fetch(`/cart/update/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        quantity: quantity
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const subtotalEl = document.getElementById(`subtotal-${id}`);
+                        if (subtotalEl) subtotalEl.textContent = data.subtotal.toLocaleString() + 'đ';
+
+                        const totalEl = document.getElementById('cart-total');
+                        if (totalEl) totalEl.textContent = data.cart_total.toLocaleString() + 'đ';
+
+                        const subtotalCartEl = document.getElementById('cart-subtotal');
+                        if (subtotalCartEl) subtotalCartEl.textContent = data.cart_total.toLocaleString() + 'đ';
+                    }
+                })
+
+                .catch(err => {
+                    console.error(err);
+                });
         }
 
         function removeCartItem(id) {

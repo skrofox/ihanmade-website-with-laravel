@@ -399,7 +399,7 @@
                 const variantId = document.getElementById('variant-id').value;
                 var user_id = document.getElementById('user-id').value;
                 if (user_id == 'no_login') {
-                    showToast("Vui lòng dăng nhập", "error");
+                    showToast("Vui lòng đăng nhập", "error");
                     return;
                 }
                 if (!variantId) {

@@ -299,8 +299,8 @@
                                             class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full">
                                         <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
                                             <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
-                                                xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1"
-                                                x="0px" y="0px" viewBox="0 0 56.966 56.966"
+                                                xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                id="Capa_1" x="0px" y="0px" viewBox="0 0 56.966 56.966"
                                                 style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve"
                                                 width="512px" height="512px">
                                                 <path
@@ -339,8 +339,8 @@
                                             sales</a>
                                     </el-disclosure>
                                 </div>
-                                <a href="#"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Features</a>
+                                <a href="{{ route('cart.index') }}"
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Cart</a>
                                 <a href="#"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Marketplace</a>
                                 <a href="#"

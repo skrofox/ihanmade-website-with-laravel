@@ -27,14 +27,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     //
     Route::get('/cart', [WebController::class, 'cart'])->name('cart.index');
-    Route::get('/checkout', [WebController::class, 'checkout'])->name('checkout.index');
+    Route::put('/cart/update/{id}', [WebController::class, 'updateCart'])->name('cart.update');
+    Route::delete('/cart/remove/{id}', [WebController::class, 'removeCartItem'])->name('cart.remove');
     //
+    Route::get('/checkout', [WebController::class, 'checkout'])->name('checkout.index');
     Route::post('/checkout', [WebController::class, 'storeOrder'])->name('checkout.store');
     Route::get('/checkout/success/{order}', [WebController::class, 'checkoutSuccess'])->name('checkout.success');
     //
-    Route::post('/cart/update/{id}', [WebController::class, 'updateCart'])->name('cart.update');
-    Route::delete('/cart/remove/{id}', [WebController::class, 'removeCartItem'])->name('cart.remove');
-
     Route::get('order/', [WebController::class, 'order'])->name('order.index');
 });
 
