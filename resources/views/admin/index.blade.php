@@ -63,7 +63,8 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600">Doanh thu</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ number_format(\App\Models\Order::sum('grand_total'), 0, ',', '.') }}đ</p>
+                    {{-- <p class="text-2xl font-semibold text-gray-900">{{ number_format(\App\Models\Order::sum('grand_total'), 0, ',', '.') }}đ</p> --}}
+                    <p class="text-2xl font-semibold text-gray-900">Chưa cập nhật</p>
                 </div>
             </div>
         </div>

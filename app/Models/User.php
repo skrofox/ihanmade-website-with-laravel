@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+use App\Models\Address;
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -41,6 +43,15 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    // public function address(){
+    //     return $this->hasMany(Address::class);
+    // }
+
+    protected function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
     protected function casts(): array
     {
         return [
@@ -49,7 +60,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function role(){
+    public function role()
+    {
         return $this->belongsTo(Role::class);
     }
 }

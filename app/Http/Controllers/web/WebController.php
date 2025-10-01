@@ -11,6 +11,7 @@ use App\Models\ProductVariant;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Address;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -81,7 +82,6 @@ class WebController extends Controller
             'variant_status' => $status,
         ]);
     }
-
 
     public function debugStock()
     {
@@ -190,6 +190,7 @@ class WebController extends Controller
         return view('cart', compact('cart', 'cartItems'));
     }
 
+
     public function updateCart(Request $request, $id)
     {
         $item = CartItem::findOrFail($id);
@@ -210,6 +211,8 @@ class WebController extends Controller
 
     public function checkout()
     {
+        $user = User::find(Auth::user()->id);
+        $addresses = $user->addresses;
         $cart = Cart::with(['items.variant', 'items.variant.currentPrice', 'items.variant.product', 'items.variant.product.images', 'items.variant.prices'])
             ->where('user_id', Auth::id())
             ->first();
@@ -218,7 +221,7 @@ class WebController extends Controller
             return redirect()->route('cart.index')->with('error', 'Giỏ hàng trống!');
         }
 
-        return view('checkout', compact('cart'));
+        return view('checkout', compact('cart', 'addresses'));
     }
 
     public function storeOrder(Request $request)
