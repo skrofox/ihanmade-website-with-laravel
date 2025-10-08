@@ -7,8 +7,10 @@
                 <a href="{{ route('home') }}" class="flex justify-center lg:justify-start">
                     <img src="" alt="HEHE">
                 </a>
-                <p class="py-8 text-sm text-gray-500 lg:max-w-xs text-center lg:text-left">Trusted in more than 100
-                    countries & 5 million customers. Follow us on social media.</p>
+                <p class="py-8 text-sm text-gray-500 lg:max-w-xs text-center lg:text-left">
+                    Đáng tin cậy ở hơn 100 quốc gia và 5 triệu khách hàng. Theo dõi chúng tôi trên phương tiện truyền
+                    thông xã hội.
+                </p>
                 <div class="flex mt-4 space-x-4 justify-center lg:justify-start sm:mt-0 ">
                     <a href="javascript:;"
                         class="w-9 h-9 rounded-full bg-indigo-600 flex justify-center items-center hover:bg-indigo-600">
@@ -60,7 +62,8 @@
                 <ul class="text-sm  transition-all duration-500">
                     <li class="mb-6"><a href="javascript:;" class="text-gray-600 hover:text-gray-900">Home</a></li>
                     <li class="mb-6"><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">About</a></li>
-                    <li class="mb-6"><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">Pricing</a></li>
+                    <li class="mb-6"><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">Pricing</a>
+                    </li>
                     <li><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">Features</a></li>
                 </ul>
             </div>
@@ -70,7 +73,8 @@
                 <ul class="text-sm  transition-all duration-500">
                     <li class="mb-6"><a href="javascript:;" class="text-gray-600 hover:text-gray-900">Figma UI
                             System</a></li>
-                    <li class="mb-6"><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">Icons Assets</a>
+                    <li class="mb-6"><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">Icons
+                            Assets</a>
                     </li>
                     <li class="mb-6"><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">Responsive
                             Blocks</a></li>
@@ -84,7 +88,8 @@
                     <li class="mb-6"><a href="javascript:;" class="text-gray-600 hover:text-gray-900">FAQs</a></li>
                     <li class="mb-6"><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">Quick Start</a>
                     </li>
-                    <li class="mb-6"><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">Documentation</a>
+                    <li class="mb-6"><a href="javascript:;"
+                            class=" text-gray-600 hover:text-gray-900">Documentation</a>
                     </li>
                     <li><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">User Guide</a></li>
                 </ul>
@@ -94,7 +99,8 @@
                 <h4 class="text-lg text-gray-900 font-medium mb-7">Blogs</h4>
                 <ul class="text-sm  transition-all duration-500">
                     <li class="mb-6"><a href="javascript:;" class="text-gray-600 hover:text-gray-900">News</a></li>
-                    <li class="mb-6"><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">Tips & Tricks</a>
+                    <li class="mb-6"><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">Tips &
+                            Tricks</a>
                     </li>
                     <li class="mb-6"><a href="javascript:;" class=" text-gray-600 hover:text-gray-900">New Updates</a>
                     </li>

@@ -8,7 +8,8 @@
                 <a href="{{ route('home') }}" class="hover:text-blue-600">Home</a>
                 <span>›</span>
                 @foreach ($product->categories as $category)
-                    <a href="#" class="hover:text-blue-600">{{ $category->name }}</a>
+                    <a href="{{ route('categories', ['dm' => $category->slug]) }}"
+                        class="hover:text-blue-600">{{ $category->name }}</a>
                     <span>›</span>
                 @endforeach
                 {{-- <span>›</span> --}}
@@ -110,7 +111,7 @@
                                                     {{ $product->name }}
                                                 @endif
                                                 <span class="text-xs text-gray-500">
-                                                    (Tồn: {{ $variant->stockItems->sum('on_hand') }})
+                                                    (Chỉ còn: {{ $variant->stockItems->sum('on_hand') }} sản phẩm)
                                                     <input id="stock" type="hidden" name="stock"
                                                         value="{{ $variant->stockItems->sum('on_hand') }}" class="hidden">
                                                 </span>
@@ -127,7 +128,8 @@
                                                 {{ $product->name }}
                                             @endif
                                             <span class="text-xs text-gray-500">
-                                                (Tồn: {{ $product->variants->first()->stockItems->sum('on_hand') }})
+                                                (Chỉ còn: {{ $product->variants->first()->stockItems->sum('on_hand') }} sản
+                                                phẩm)
                                                 <input id="stock" type="hidden" name="stock"
                                                     value="{{ $product->variants->first()->stockItems->sum('on_hand') }}"
                                                     class="hidden">
@@ -213,48 +215,21 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <!-- Product Card 1 -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                    <div class="bg-gray-300 aspect-square flex items-center justify-center">
-                        <span class="text-gray-500">Product Image</span>
+                @foreach ($recommendProducts as $product)
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                        <a href="{{ route('detail', $product->slug) }}">
+                            <img src="{{ Storage::url($product->main_image->url) }}"
+                                class="bg-gray-300 aspect-square flex items-center justify-center" />
+                        </a>
+                        <div class="p-4">
+                            <a href="{{ route('detail', $product->slug) }}">
+                                <h3 class="font-medium mb-2">{{ $product->name }}</h3>
+                            </a>
+                            <p class="text-red-600 font-bold">
+                                {{ $product->min_price ? number_format($product->min_price) : 'Liên Hệ' }}</p>
+                        </div>
                     </div>
-                    <div class="p-4">
-                        <h3 class="font-medium mb-2">Sản phẩm mới 1</h3>
-                        <p class="text-red-600 font-bold">1.500.000đ</p>
-                    </div>
-                </div>
-
-                <!-- Product Card 2 -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                    <div class="bg-gray-300 aspect-square flex items-center justify-center">
-                        <span class="text-gray-500">Product Image</span>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-medium mb-2">Sản phẩm mới 1</h3>
-                        <p class="text-red-600 font-bold">1.500.000đ</p>
-                    </div>
-                </div>
-
-                <!-- Product Card 3 -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                    <div class="bg-gray-300 aspect-square flex items-center justify-center">
-                        <span class="text-gray-500">Product Image</span>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-medium mb-2">Sản phẩm mới 1</h3>
-                        <p class="text-red-600 font-bold">1.500.000đ</p>
-                    </div>
-                </div>
-
-                <!-- Product Card 4 -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                    <div class="bg-gray-300 aspect-square flex items-center justify-center">
-                        <span class="text-gray-500">Product Image</span>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-medium mb-2">Sản phẩm mới 1</h3>
-                        <p class="text-red-600 font-bold">1.500.000đ</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
 
             <div class="text-center">

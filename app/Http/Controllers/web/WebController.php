@@ -20,6 +20,12 @@ use Illuminate\Support\Facades\Log;
 class WebController extends Controller
 {
     //
+
+    public function account(){
+        $user = Auth::user();
+        $orders = Order::where('user_id', $user->id)->get();
+        return view('account', compact('user', 'orders'));
+    }
     public function index()
     {
         $newProducts =  Product::with(['variants.currentPrice'])
@@ -45,8 +51,18 @@ class WebController extends Controller
             'images',
             'categories'
         ])->where("slug", $slug)->first();
-        // $recommendProduct = Product::where()
-        return view("detail", compact("product"));
+        $category = $product->categories()->first();
+        // $recommendProducts = $category->products()->take(4)->get();
+        if (!$category) {
+            $recommendProducts = collect(); // Trống
+        } else {
+            // Lấy sản phẩm gợi ý từ cùng category (trừ chính sản phẩm hiện tại)
+            $recommendProducts = $category->products()
+                ->where('id', '!=', $product->id)
+                ->take(4)
+                ->get();
+        }
+        return view("detail", compact("product", "recommendProducts"));
     }
 
     public function info_variant($id)
@@ -274,7 +290,6 @@ class WebController extends Controller
                 'user_id' => Auth::id(),
                 'email' => $request->email ?: Auth::user()->email,
                 'shipping_address_id' => $shippingAddress->id,
-                'billing_address_id' => $shippingAddress->id, // Tạm thời dùng chung địa chỉ
                 'status' => 'placed',
                 'subtotal' => $subtotal,
                 'discount_total' => $discount,
@@ -364,5 +379,24 @@ class WebController extends Controller
             // ], 400);
             return redirect()->route('cart.index')->with('error', 'Xóa không thành công: ' . $th->getMessage());
         }
+    }
+
+    public function categories(Request $request)
+    {
+        $dm = $request->query('dm');
+        $categories = Category::all();
+        $category = Category::where('slug', $dm)->first();
+        if ($dm) {
+            $category = Category::where('slug', $dm)->first();
+
+            if (!$category) {
+                abort(404, 'Danh mục không tồn tại.');
+            }
+
+            $products = $category->products()->paginate(12);
+        } else {
+            $products = Product::paginate(12);
+        }
+        return view('categories', compact('categories', 'products'));
     }
 }

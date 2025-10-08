@@ -27,9 +27,10 @@
         </div>
 
         <div class="text-center">
-            <button class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors">
+            <a href="{{ route('categories') }}"
+                class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors">
                 XEM TẤT CẢ SẢN PHẨM MỚI
-            </button>
+            </a>
         </div>
     </section>
 
@@ -63,9 +64,10 @@
                 @endforeach
             </div>
             <div class="text-center">
-                <button class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors">
+                <a href="{{ route('categories', ['dm' => $productshandmade->first()->categories->first()->slug]) }}"
+                    type="submit" class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors">
                     XEM TẤT CẢ
-                </button>
+                </a>
             </div>
 
         </section>

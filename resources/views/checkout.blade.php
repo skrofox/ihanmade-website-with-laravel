@@ -130,98 +130,25 @@
                         <!-- Shipping Address -->
                         <div class="bg-white rounded-lg shadow-sm p-6">
                             <h2 class="text-xl font-bold text-gray-800 mb-6">Địa chỉ giao hàng</h2>
-                            <div class="space-y-4">
-                                {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4"> --}}
-                                    <label for="demo-location-wavebear">Nhập địa chỉ giao hàng</label>
-                                    <div id="demo-location-wavebear"></div>
-                                    {{-- <div>
-                                        <label for="location"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Tỉnh/Thành phố *</label>
-                                        <select name="provincesSelect" id="provincesSelect"></select>
-                                    </div>
-                                    <div>
-                                        <label for="location"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Quận/huyện</label>
-                                        <select name="wardsSelect" id="wardsSelect"></select>
-                                    </div> --}}
-                                    {{-- <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Tình/Thành phố *</label>
-                                        <select name="province" required
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                            <option value="">Chọn tỉnh/thành phố</option>
-                                            <option value="ho-chi-minh">TP. Hồ Chí Minh</option>
-                                            <option value="ha-noi">Hà Nội</option>
-                                            <option value="da-nang">Đà Nẵng</option>
-                                            <option value="can-tho">Cần Thơ</option>
-                                            <option value="hai-phong">Hải Phòng</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Quận/Huyện *</label>
-                                        <select name="district" required
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                            <option value="">Chọn quận/huyện</option>
-                                            <option value="quan-1">Quán 1</option>
-                                            <option value="quan-2">Quán 2</option>
-                                            <option value="quan-3">Quán 3</option>
-                                            <option value="quan-4">Quán 4</option>
-                                            <option value="quan-5">Quán 5</option>
-                                        </select>
-                                    </div> --}}
-                                {{-- </div> --}}
-                                {{-- <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Đường/Phòng *</label>
-                                    <input type="text" name="ward" required
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        placeholder="Nhập đường/phòng">
-                                </div> --}}
+                            <div class="space-y-4 w-full ">
+                                <p>
+                                    @error('address')
+                                        {{ $message }}
+                                    @enderror
+                                </p>
+                                <div class="css_select_div">
+                                    <select class="css_select" id="tinh" name="tinh" title="Chọn Tỉnh Thành" required>
+                                        <option value="0">Tỉnh Thành</option>
+                                    </select>
+                                    <select class="css_select" id="quan" name="quan" title="Chọn Quận Huyện" required>
+                                        <option value="0">Quận Huyện</option>
+                                    </select>
+                                    <select class="css_select" id="phuong" name="phuong" title="Chọn Phường Xã" required>
+                                        <option value="0">Phường Xã</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="space-y-4">
-                                {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Tỉnh/Thành phố *</label>
-                                    <select name="province" 
-                                            required
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                        <option value="">Chọn tỉnh/thành phố</option>
-                                        <option value="ho-chi-minh">TP. Hồ Chí Minh</option>
-                                        <option value="ha-noi">Hà Nội</option>
-                                        <option value="da-nang">Đà Nẵng</option>
-                                        <option value="can-tho">Cần Thơ</option>
-                                        <option value="hai-phong">Hải Phòng</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Quận/Huyện *</label>
-                                    <select name="district" 
-                                            required
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                        <option value="">Chọn quận/huyện</option>
-                                        <option value="quan-1">Quận 1</option>
-                                        <option value="quan-3">Quận 3</option>
-                                        <option value="quan-7">Quận 7</option>
-                                        <option value="thu-duc">Thủ Đức</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Phường/Xã *</label>
-                                    <select name="ward" 
-                                            required
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                        <option value="">Chọn phường/xã</option>
-                                        <option value="phuong-ben-thanh">Phường Bến Thành</option>
-                                        <option value="phuong-da-kao">Phường Đa Kao</option>
-                                        <option value="phuong-nguyen-thai-binh">Phường Nguyễn Thái Bình</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Mã bưu điện</label>
-                                    <input type="text" 
-                                           name="postal_code"
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                           placeholder="Nhập mã bưu điện">
-                                </div>
-                            </div> --}}
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Địa chỉ cụ thể *</label>
                                     <textarea name="address" required rows="3"
@@ -470,27 +397,62 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/gh/wavebear-dev/WaveBearNguyen@03eb1c1/API/locationVietNam.js"></script>
+    <script src="https://esgoo.net/scripts/jquery.js"></script>
+    <script>
+        $(document).ready(function() {
+            //Lấy tỉnh thành
+            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function(data_tinh) {
+                if (data_tinh.error == 0) {
+                    $.each(data_tinh.data, function(key_tinh, val_tinh) {
+                        $("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh
+                            .full_name + '</option>');
+                    });
+                    $("#tinh").change(function(e) {
+                        var idtinh = $(this).val();
+                        //Lấy quận huyện
+                        $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function(
+                            data_quan) {
+                            if (data_quan.error == 0) {
+                                $("#quan").html('<option value="0">Quận Huyện</option>');
+                                $("#phuong").html('<option value="0">Phường Xã</option>');
+                                $.each(data_quan.data, function(key_quan, val_quan) {
+                                    $("#quan").append('<option value="' + val_quan
+                                        .id + '">' + val_quan.full_name +
+                                        '</option>');
+                                });
+                                //Lấy phường xã  
+                                $("#quan").change(function(e) {
+                                    var idquan = $(this).val();
+                                    $.getJSON('https://esgoo.net/api-tinhthanh/3/' +
+                                        idquan + '.htm',
+                                        function(data_phuong) {
+                                            if (data_phuong.error == 0) {
+                                                $("#phuong").html(
+                                                    '<option value="0">Phường Xã</option>'
+                                                );
+                                                $.each(data_phuong.data,
+                                                    function(key_phuong,
+                                                        val_phuong) {
+                                                        $("#phuong").append(
+                                                            '<option value="' +
+                                                            val_phuong
+                                                            .id + '">' +
+                                                            val_phuong
+                                                            .full_name +
+                                                            '</option>');
+                                                    });
+                                            }
+                                        });
+                                });
 
-    {{-- <script>
-        const provincesSelect = document.getElementById('provincesSelect');
-        renderLocationWaveBear({
-            type: 'provider',
-            selectElement: provincesSelect
-        });
-        provinceSelect.addEventListener('change', function() {
+                            }
+                        });
+                    });
 
-            const wardsSelect = document.getElementById('wardsSelect');
-            const provinceCode = provincesSelect.value;
-            console.log(provinceCode);
-            renderLocationWaveBear({
-                type: 'ward',
-                parentId: provinceCode,
-                selectElement: wardsSelect
+                }
             });
-        })
-    </script> --}}
-
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const shippingMethods = document.querySelectorAll('input[name="shipping_method"]');

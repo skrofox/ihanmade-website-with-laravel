@@ -16,7 +16,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users');
             $table->string('email', 150);
-            $table->foreignId('billing_address_id')->nullable()->constrained('addresses');
             $table->foreignId('shipping_address_id')->nullable()->constrained('addresses');
             $table->enum('status', ['placed','paid','fulfilling','shipped','completed','cancelled'])->default('placed');
             $table->decimal('subtotal', 12, 2)->default(0);

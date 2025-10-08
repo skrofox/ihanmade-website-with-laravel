@@ -20,9 +20,11 @@
 <body>
     @include('layouts.web.header')
 
-    <div class="pt-32">
-        @yield('content')
-    </div>
+    <main>
+        <div class="pt-32">
+            @yield('content')
+        </div>
+    </main>
 
     @include('layouts.web.footer')
 

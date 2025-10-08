@@ -17,11 +17,12 @@ Route::get('/search', [WebController::class, 'search'])->name('search');
 Route::post('add-to-cart', [WebController::class, 'addToCart'])->name('add_to_cart');
 Route::get('/detail-product/{slug}', [WebController::class, 'detail'])->name('detail');
 Route::get('/product/variant/{id}', [WebController::class, 'info_variant'])->name('product.variant');
-// Route::get('/detail-product/{slug}/{sku}', [WebController::class, 'detail_variant'])->name('detail_variant');
-// Route::get('/debug-stock', [WebController::class, 'debugStock'])->name('debug_stock');
+Route::get('/categories', [WebController::class, 'categories'])->name('categories');
 // Route::middleware(['auth', 'roleUser'])->group(function () {
 // });
 Route::middleware('auth')->group(function () {
+    Route::get('/account', [WebController::class, 'account'])->name('account');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
