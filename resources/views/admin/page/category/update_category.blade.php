@@ -18,7 +18,7 @@
                             <label for="">Parent category</label>
                             <select name="parent_id" id="parent_id"
                                 class="w-96 bg-transparent placeholder:text-black text-black text-[16px] border border-slate-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-200 hover:border-slate-200 shadow-sm focus:shadow-md appearance-none cursor-pointer">
-                                <option value="{{ $category->parent?->name }}" class="bg-slate-200 hover:bg-slate-300">
+                                <option value="{{ $category->parent?->id }}" class="bg-slate-200 hover:bg-slate-300">
                                     {{ $category->parent?->name }}</option>
                                 @foreach ($categories as $item)
                                     <option value="{{ $item->id }}" class="bg-slate-200 hover:bg-slate-400">

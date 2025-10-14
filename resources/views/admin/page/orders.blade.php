@@ -171,8 +171,8 @@
                             <option value="placed">Đã đặt hàng</option>
                             <option value="paid">Đã thanh toán</option>
                             <option value="fulfilling">Đang chuẩn bị</option>
-                            <option value="shipped">Đã giao hàng</option>
-                            <option value="completed">Hoàn thành</option>
+                            <option value="shipped">Đang giao hàng</option>
+                            {{-- <option value="completed">Hoàn thành</option> --}}
                             <option value="cancelled">Đã hủy</option>
                         </select>
                     </div>

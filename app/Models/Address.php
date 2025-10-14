@@ -29,6 +29,11 @@ class Address extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'shipping_address_id');
+    }
+
     public function scopeDefaultShipping($query)
     {
         return $query->where('is_default_shipping', true);

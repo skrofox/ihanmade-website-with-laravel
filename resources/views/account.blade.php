@@ -82,7 +82,7 @@
                                                 @endswitch
 
                                             </div>
-                                            <div class="space-x-2">
+                                            <div class="flex space-x-2">
                                                 <!-- Nút theo dõi -->
                                                 {{-- {{ route('orders.track', $order->id) }} --}}
                                                 {{-- <a href=""
@@ -93,45 +93,55 @@
 
                                                 <a href="{{ route('orders.show', $order->id) }}" target="_blank"
                                                     rel="noopener noreferrer"
-                                                    class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition">Xem
+                                                    class="px-3 py-1 bg-slate-600 text-white rounded hover:bg-slate-700 transition">Xem
                                                     đơn</a>
 
-                                                @if ($order->status != 'completed' && $order->status != 'cancelled')
-                                                    <button type="button" onclick="showCancelForm({{ $order->id }})"
-                                                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">
-                                                        Hủy đơn
-                                                    </button>
+                                                @if ($order->created_at->diffInDays(now()) >= 3)
+                                                    <form action="{{ route('order.completed') }}" method="post">
+                                                        <button type="submit"
+                                                            class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition">
+                                                            Đã Nhận
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    @if ($order->status != 'completed' && $order->status != 'cancelled' && $order->status != 'shipped')
+                                                        <button type="button" onclick="showCancelForm({{ $order->id }})"
+                                                            class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">
+                                                            Hủy đơn
+                                                        </button>
 
-                                                    <!-- Modal (ẩn ban đầu) -->
-                                                    <div id="cancelModal-{{ $order->id }}"
-                                                        class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-                                                        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-                                                            <h3 class="text-lg font-semibold mb-4 text-gray-800">Lý do hủy
-                                                                đơn</h3>
-                                                            <form action="{{ route('orders.cancel', $order->id) }}"
-                                                                method="POST"
-                                                                onsubmit="return validateReason({{ $order->id }})">
-                                                                @csrf
-                                                                @method('PUT')
+                                                        <!-- Modal (ẩn ban đầu) -->
+                                                        <div id="cancelModal-{{ $order->id }}"
+                                                            class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+                                                            <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+                                                                <h3 class="text-lg font-semibold mb-4 text-gray-800">Lý do
+                                                                    hủy
+                                                                    đơn</h3>
+                                                                <form action="{{ route('orders.cancel', $order->id) }}"
+                                                                    method="POST"
+                                                                    onsubmit="return validateReason({{ $order->id }})">
+                                                                    @csrf
+                                                                    @method('PUT')
 
-                                                                <textarea id="cancelReason-{{ $order->id }}" name="reason" rows="3" required
-                                                                    class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring focus:ring-red-200"
-                                                                    placeholder="Nhập lý do hủy đơn..."></textarea>
+                                                                    <textarea id="cancelReason-{{ $order->id }}" name="reason" rows="3" required
+                                                                        class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring focus:ring-red-200"
+                                                                        placeholder="Nhập lý do hủy đơn..."></textarea>
 
-                                                                <div class="flex justify-end gap-3 mt-4">
-                                                                    <button type="button"
-                                                                        onclick="closeCancelForm({{ $order->id }})"
-                                                                        class="px-3 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition">
-                                                                        Hủy
-                                                                    </button>
-                                                                    <button type="submit"
-                                                                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">
-                                                                        Xác nhận hủy
-                                                                    </button>
-                                                                </div>
-                                                            </form>
+                                                                    <div class="flex justify-end gap-3 mt-4">
+                                                                        <button type="button"
+                                                                            onclick="closeCancelForm({{ $order->id }})"
+                                                                            class="px-3 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition">
+                                                                            Hủy
+                                                                        </button>
+                                                                        <button type="submit"
+                                                                            class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">
+                                                                            Xác nhận hủy
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    @endif
                                                 @endif
                                             </div>
                                         </div>
@@ -187,8 +197,8 @@
                                     class="w-full border rounded p-2" required>
                                 <input type="password" name="new_password" placeholder="Mật khẩu mới"
                                     class="w-full border rounded p-2" required>
-                                <input type="password" name="new_password_confirmation" placeholder="Xác nhận mật khẩu mới"
-                                    class="w-full border rounded p-2" required>
+                                <input type="password" name="new_password_confirmation"
+                                    placeholder="Xác nhận mật khẩu mới" class="w-full border rounded p-2" required>
                                 <button type="submit"
                                     class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Cập nhật mật
                                     khẩu</button>

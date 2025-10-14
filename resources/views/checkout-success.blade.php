@@ -154,7 +154,7 @@ use Illuminate\Support\Facades\Storage;
                     <h4 class="font-semibold text-blue-800 mb-2">Thông tin bổ sung</h4>
                     <p class="text-sm text-blue-700">
                         Bạn sẽ nhận được email xác nhận đơn hàng trong vài phút tới. 
-                        Chúng tôi sẽ cập nhật trạng thái đơn hàng qua email và SMS.
+                        Chúng tôi sẽ cập nhật trạng thái đơn hàng qua email.
                     </p>
                 </div>
             </div>

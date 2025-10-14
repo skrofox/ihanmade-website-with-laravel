@@ -25,7 +25,7 @@
                             <img src="{{ Storage::url($product->images->first()->url) }}" alt=""
                                 class="w-full lg:h-48 sm:h-32 object-cover rounded-t-lg">
                         </a>
-                        <h3 class="mt-4 text-lg font-semibold text-truncate text-center">{{ Str::upper($product->name) }}
+                        <h3 class="mt-4 text-lg font-semibold text-truncate text-center line-clamp-2">{{ Str::upper($product->name) }}
                         </h3>
                         <p class="text-sm font-bold text-center text-red-600">
                             {{ $product->min_price ? number_format($product->min_price) . 'đ' : 'Liên Hệ' }}</p>

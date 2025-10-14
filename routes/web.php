@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('order/', [WebController::class, 'order'])->name('order.index');
     Route::get('/orders/show/{id}', [WebController::class, 'orders_show'])->name('orders.show');
     Route::put('/orders-cancel/{id}', [WebController::class, 'orders_cancel'])->name('orders.cancel');
+    Route::put('order/completed', [WebController::class, 'order_completed'])->name('order.completed');
 
     Route::post('/user-updateName', [WebController::class, 'updateName'])->name('user.updateName');
     Route::post('/user-changePassword', [WebController::class, 'changePassword'])->name('user.changePassword');

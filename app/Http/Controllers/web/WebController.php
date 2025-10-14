@@ -320,6 +320,16 @@ class WebController extends Controller
                     'discount_total' => 0,
                     'tax_total' => 0,
                 ]);
+
+                // Cập nhật tồn kho (giảm on_hand, tăng reserved)
+                foreach ($cartItem->variant->stockItems as $stockItem) {
+                    if ($stockItem->on_hand >= $cartItem->quantity) {
+                        $stockItem->on_hand -= $cartItem->quantity;
+                        // $stockItem->reserved += $cartItem->quantity;
+                        $stockItem->save();
+                        break; // Giả sử chỉ cần cập nhật một stock item đủ hàng
+                    }
+                }
             }
 
             try {
@@ -341,6 +351,35 @@ class WebController extends Controller
             Log::error('Checkout error: ' . $e->getMessage());
             return back()->with('error', 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!');
         }
+    }
+
+    public function order_completed(Request $request)
+    {
+        $user = Auth::user();
+        $order = Order::where('user_id', $user->id)
+            ->where('status', 'shipped')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        // foreach ($order->items as $item) {
+        //     $variant = $item->variant;
+        //     if ($variant) {
+        //         foreach ($variant->stockItems as $stockItem) {
+        //             $stockItem->reserved = max(0, $stockItem->reserved - $item->qty);
+        //             $stockItem->on_hand = max(0, $stockItem->on_hand - $item->qty);
+        //             $stockItem->save();
+        //         }
+        //     }
+        // }
+
+        if (!$order) {
+            return back()->with('error', 'Không tìm thấy đơn hàng để hoàn thành.');
+        }
+
+        $order->status = 'completed';
+        $order->save();
+
+        return back()->with('success', 'Đơn hàng đã được đánh dấu là hoàn thành.');
     }
 
     public function checkoutSuccess(Order $order)
@@ -377,7 +416,7 @@ class WebController extends Controller
 
     public function orders_cancel(Request $request, $id)
     {
-        $order = Order::where('user_id', Auth::id())->where('id', $id)->first();
+        $order = Order::where('id', $id)->where('user_id', Auth::id())->first();
 
         if (!$order) {
             abort(404, 'Page Not Found!');
@@ -390,6 +429,19 @@ class WebController extends Controller
         $order->cancel_reason = $request->reason;
 
         $order->status = 'cancelled';
+
+        // Cập nhật lại tồn kho (tăng on_hand, giảm reserved)
+        foreach ($order->items as $item) {
+            $variant = $item->variant;
+            if ($variant) {
+                foreach ($variant->stockItems as $stockItem) {
+                    $stockItem->on_hand += $item->qty;
+                    // $stockItem->reserved = max(0, $stockItem->reserved - $item->qty);
+                    $stockItem->save();
+                }
+            }
+        }
+
         $order->save();
 
         return redirect()->back()->with('success', 'Đơn hàng đã được hủy.');

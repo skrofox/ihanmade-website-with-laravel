@@ -13,8 +13,8 @@
                                 alt="{{ $product->main_image ? $product->main_image->alt : $product->name }}"
                                 class="w-full h-full object-contain">
                         </div>
-                        <div class="p-4">
-                            <h3 class="font-medium mb-2">{{ $product->name }}</h3>
+                        <div class="p-4 min-h-32">
+                            <h3 class="font-medium mb-2 line-clamp-2">{{ $product->name }}</h3>
                             @if ($product->min_price)
                                 <p class="text-red-600 font-bold">{{ number_format($product->min_price) }}</p>
                             @else
@@ -52,7 +52,7 @@
                                     class="w-full h-full object-contain">
                             </div>
                             <div class="p-4">
-                                <h3 class="font-medium mb-2">{{ $product->name }}</h3>
+                                <h3 class="font-medium mb-2 line-clamp-1">{{ $product->name }}</h3>
                                 @if ($product->min_price)
                                     <p class="text-red-600 font-bold">{{ number_format($product->min_price) }}</p>
                                 @else

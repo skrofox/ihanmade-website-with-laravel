@@ -191,7 +191,7 @@
         </div>
 
         <!-- Product Tabs -->
-        <div class="mb-12">
+        {{-- <div class="mb-12">
             <div class="border-b border-gray-200">
                 <nav class="flex space-x-8">
                     <button class="py-2 px-1 border-b-2 border-blue-600 text-blue-600 font-medium">
@@ -207,7 +207,7 @@
                     <span class="text-gray-500">Product Description Content</span>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Related Products -->
         <section>
@@ -233,10 +233,11 @@
             </div>
 
             <div class="text-center">
-                <button class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors">
+                <a href="{{ route('categories', ['dm' => $category->slug]) }}" class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors">
                     XEM TẤT CẢ SẢN PHẨM LIÊN QUAN
-                </button>
+                </a>
             </div>
+            
         </section>
 
     </main>

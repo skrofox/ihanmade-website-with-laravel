@@ -5,7 +5,7 @@
             class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 lg:gap-8 py-14 max-w-xs mx-auto sm:max-w-2xl md:max-w-3xl lg:max-w-full">
             <div class="col-span-full mb-10 lg:col-span-2 lg:mb-0">
                 <a href="{{ route('home') }}" class="flex justify-center lg:justify-start">
-                    <img src="" alt="HEHE">
+                    <img class="w-16 h-16" src="{{ asset('logo.png') }}" alt="HEHE">
                 </a>
                 <p class="py-8 text-sm text-gray-500 lg:max-w-xs text-center lg:text-left">
                     Đáng tin cậy ở hơn 100 quốc gia và 5 triệu khách hàng. Theo dõi chúng tôi trên phương tiện truyền
