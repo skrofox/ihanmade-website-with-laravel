@@ -68,7 +68,7 @@
                 </div>
 
                 <!-- Số lượng đặt trước -->
-                <div>
+                <div class="hidden">
                     <label for="reserved" class="block text-sm font-medium text-gray-700 mb-2">
                         Số lượng đặt trước
                     </label>

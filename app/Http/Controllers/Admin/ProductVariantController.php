@@ -50,7 +50,7 @@ class ProductVariantController extends Controller
      */
     public function create()
     {
-        $products = Product::all();
+        $products = Product::orderByDesc('created_at')->get();
         return view('admin.page.variant.create_variant', compact('products'));
     }
 
@@ -63,7 +63,7 @@ class ProductVariantController extends Controller
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'sku' => 'required|string|max:100|unique:product_variants,sku',
-            'barcode' => 'nullable|string|max:100|unique:product_variants,barcode',
+            // 'barcode' => 'nullable|string|max:100|unique:product_variants,barcode',
             'option_keys' => 'nullable|array',
             'option_values' => 'nullable|array',
             'price' => 'required|numeric|min:0',
@@ -74,8 +74,8 @@ class ProductVariantController extends Controller
             'sku.required' => 'Vui lòng nhập SKU',
             'sku.unique' => 'SKU đã tồn tại',
             'sku.max' => 'SKU không được vượt quá 100 ký tự',
-            'barcode.unique' => 'Mã vạch đã tồn tại',
-            'barcode.max' => 'Mã vạch không được vượt quá 100 ký tự',
+            // 'barcode.unique' => 'Mã vạch đã tồn tại',
+            // 'barcode.max' => 'Mã vạch không được vượt quá 100 ký tự',
             'price.required' => 'Vui lòng nhập giá bán',
             'price.min' => 'Giá biến thể phải lớn hơn 0',
             'status.required' => 'Vui lòng chọn trạng thái',
@@ -107,7 +107,7 @@ class ProductVariantController extends Controller
             $variant = ProductVariant::create([
                 'product_id' => $request->product_id,
                 'sku' => $request->sku . '-' . Carbon::now()->getTimestamp(),
-                'barcode' => $request->barcode ?: null,
+                // 'barcode' => $request->barcode ?: null,
                 'option_value' => $optionValue,
                 'status' => $request->status,
             ]);
@@ -118,7 +118,7 @@ class ProductVariantController extends Controller
             ]);
 
             return redirect()
-                ->route('variant_index')
+                ->route('stock_create')
                 ->with('success', 'Tạo biến thể sản phẩm thành công!');
         } catch (\Exception $e) {
             return back()

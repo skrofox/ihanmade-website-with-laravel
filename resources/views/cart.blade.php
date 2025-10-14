@@ -56,7 +56,9 @@
                                                 <div class="flex flex-col sm:flex-row sm:justify-between">
                                                     <div class="flex-1">
                                                         <h3 class="text-lg font-semibold text-gray-800 mb-1">
-                                                            {{ $item->variant->product->name }}
+                                                            <a href="{{ route('detail', $item->variant->product->slug) }}">
+                                                                {{ $item->variant->product->name }}
+                                                            </a>
                                                         </h3>
                                                         <p class="text-sm text-gray-600 mb-2">{{ $item->variant->sku }}</p>
                                                         <div class="flex items-center space-x-4 text-sm text-gray-600">

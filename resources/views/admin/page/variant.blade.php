@@ -48,7 +48,7 @@
                                 Sản phẩm
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Mã vạch
+                                Giá bán
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Tùy chọn
@@ -78,7 +78,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">
-                                        {{ $variant->barcode ?: 'Không có' }}
+                                        {{ $variant->prices->first()->list_priced ?? "Chưa có giá" }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -95,8 +95,8 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex space-x-2">
-                                        <a href="{{ route('variant_detail', $variant->id) }}"
-                                            class="text-blue-600 hover:text-blue-900">Chi tiết</a>
+                                        {{-- <a href="{{ route('variant_detail', $variant->id) }}"
+                                            class="text-blue-600 hover:text-blue-900">Chi tiết</a> --}}
                                         <a href="{{ route('variant_edit', $variant->id) }}" class="text-indigo-600 hover:text-indigo-900">Sửa</a>
                                         <form action="{{ route('variant_destroy', $variant->id) }}" method="POST" class="inline"
                                             onsubmit="return confirm('Bạn có chắc muốn xóa biến thể này?')">

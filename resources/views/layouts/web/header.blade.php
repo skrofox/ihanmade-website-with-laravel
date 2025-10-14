@@ -69,7 +69,7 @@
         <el-popover-group class="hidden lg:flex lg:gap-x-12 items-center">
             <a href="{{ route('home') }}" class="text-sm/6 font-semibold text-white">Trang chủ</a>
             <a href="{{ route('categories') }}" class="text-sm/6 font-semibold text-white">Danh mục</a>
-            <a href="#" class="text-sm/6 font-semibold text-white">Sản phẩm</a>
+            {{-- <a href="#" class="text-sm/6 font-semibold text-white">Sản phẩm</a> --}}
             <a href="#" class="text-sm/6 font-semibold text-white">Thiện Nguyện</a>
             <div class="relative text-gray-600">
                 <form action="{{ route('search') }}" method="get">
@@ -110,7 +110,7 @@
                         id="user-dropdown-menu">
                         <a href="{{ route('account') }}" class="block px-4 py-2 hover:bg-[#253040]">Tài khoản</a>
                         <a href="{{ route('cart.index') }}" class="block px-4 py-2 hover:bg-[#253040]">Giỏ hàng</a>
-                        <a href="{{ route('order.index') }}" class="block px-4 py-2 hover:bg-[#253040]">Đơn hàng</a>
+                        {{-- <a href="{{ route('order.index') }}" class="block px-4 py-2 hover:bg-[#253040]">Đơn hàng</a> --}}
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="w-full text-left px-4 py-2 hover:bg-[#253040]">Đăng
@@ -170,18 +170,22 @@
                                     </form>
                                 </div>
                                 <a href="{{ route('cart.index') }}"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Giỏ hàng</a>
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Giỏ
+                                    hàng</a>
+                                {{-- <a href="#"
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Sản
+                                    phẩm</a> --}}
                                 <a href="#"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Sản phẩm</a>
-                                <a href="#"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Thiện nguyện</a>
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Thiện
+                                    nguyện</a>
                             </div>
                             <div class="py-6">
                                 @if (Auth::user())
                                     <form action="{{ route('logout') }}" method="post">
                                         @csrf
                                         <button type="submit"
-                                            class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">Đăng xuất
+                                            class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">Đăng
+                                            xuất
                                         </button>
                                     </form>
                                 @else

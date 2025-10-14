@@ -52,7 +52,7 @@ class ProductVariant extends Model
     public function getOptionValueTextAttribute()
     {
         if (!$this->option_value || !is_array($this->option_value)) {
-            return 'Không có';
+            return 'Mặc định';
         }
 
         $options = [];

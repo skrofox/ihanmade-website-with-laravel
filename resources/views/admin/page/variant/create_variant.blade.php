@@ -43,7 +43,7 @@
             </div>
 
             <!-- Barcode -->
-            <div>
+            {{-- <div>
                 <label for="barcode" class="block text-sm font-medium text-gray-700 mb-2">
                     Mã vạch
                 </label>
@@ -53,7 +53,7 @@
                 @error('barcode')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
-            </div>
+            </div> --}}
 
             <!-- Option Values -->
             <div>

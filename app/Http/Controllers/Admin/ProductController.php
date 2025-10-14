@@ -83,7 +83,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('product_create')->with('success', 'Add a new product successful');
+        return redirect()->route('variant_create')->with('success', 'Add a new product successful');
     }
 
     public function destroy($id)

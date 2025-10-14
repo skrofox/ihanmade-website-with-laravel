@@ -108,7 +108,8 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại *</label>
-                                    <input type="tel" name="phone" value="{{ old('phone') }}" required
+                                    <input type="tel" name="phone"
+                                        value="{{ old('phone', $user->addresses->first()->phone ?? '') }}" required
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('phone') border-red-500 @enderror"
                                         placeholder="Nhập số điện thoại">
                                     @error('phone')
@@ -137,15 +138,22 @@
                                     @enderror
                                 </p>
                                 <div class="css_select_div">
-                                    <select class="css_select" id="tinh" name="tinh" title="Chọn Tỉnh Thành" required>
+                                    <select class="css_select" id="tinh" name="tinh" title="Chọn Tỉnh Thành"
+                                        required>
                                         <option value="0">Tỉnh Thành</option>
                                     </select>
-                                    <select class="css_select" id="quan" name="quan" title="Chọn Quận Huyện" required>
+                                    <select class="css_select" id="quan" name="quan" title="Chọn Quận Huyện"
+                                        required>
                                         <option value="0">Quận Huyện</option>
                                     </select>
-                                    <select class="css_select" id="phuong" name="phuong" title="Chọn Phường Xã" required>
+                                    <select class="css_select" id="phuong" name="phuong" title="Chọn Phường Xã"
+                                        required>
                                         <option value="0">Phường Xã</option>
                                     </select>
+                                    <input type="hidden" name="tinh_name" id="tinh_name" value="{{ old('tinh_name') }}">
+                                    <input type="hidden" name="quan_name" id="quan_name" value="{{ old('quan_name') }}">
+                                    <input type="hidden" name="phuong_name" id="phuong_name"
+                                        value="{{ old('phuong_name') }}">
                                 </div>
                             </div>
                             <div class="space-y-4">
@@ -532,6 +540,91 @@
             `;
                 }
                 // Add more districts as needed
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tinh = document.getElementById('tinh');
+            const quan = document.getElementById('quan');
+            const phuong = document.getElementById('phuong');
+
+            // giá trị trước (giữ khi validate lỗi)
+            const oldTinh = "{{ old('tinh', $user->addresses->first()->province_id ?? '') }}";
+            const oldQuan = "{{ old('quan', $user->addresses->first()->district_id ?? '') }}";
+            const oldPhuong = "{{ old('phuong', $user->addresses->first()->ward_id ?? '') }}";
+
+            function fetchJson(url) {
+                return fetch(url, {
+                    cache: 'no-cache'
+                }).then(r => r.json());
+            }
+
+            // nạp tỉnh
+            fetchJson('https://esgoo.net/api-tinhthanh/1/0.htm')
+                .then(data => {
+                    if (data && data.error === 0) {
+                        data.data.forEach(p => {
+                            const o = document.createElement('option');
+                            o.value = p.id;
+                            o.textContent = p.full_name;
+                            if (String(p.id) === String(oldTinh)) o.selected = true;
+                            tinh.appendChild(o);
+                        });
+                        if (oldTinh) tinh.dispatchEvent(new Event('change'));
+                    }
+                }).catch(() => {});
+
+            // khi chọn tỉnh -> load quận
+            tinh.addEventListener('change', function() {
+                const idtinh = this.value || 0;
+                quan.innerHTML = '<option value="0">Quận Huyện</option>';
+                phuong.innerHTML = '<option value="0">Phường Xã</option>';
+                if (!idtinh || idtinh === '0') return;
+                fetchJson('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm')
+                    .then(data => {
+                        if (data && data.error === 0) {
+                            data.data.forEach(q => {
+                                const o = document.createElement('option');
+                                o.value = q.id;
+                                o.textContent = q.full_name;
+                                if (String(q.id) === String(oldQuan)) o.selected = true;
+                                quan.appendChild(o);
+                            });
+                            if (oldQuan) quan.dispatchEvent(new Event('change'));
+                        }
+                    }).catch(() => {});
+            });
+
+            // khi chọn quận -> load phường
+            quan.addEventListener('change', function() {
+                const idquan = this.value || 0;
+                phuong.innerHTML = '<option value="0">Phường Xã</option>';
+                if (!idquan || idquan === '0') return;
+                fetchJson('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm')
+                    .then(data => {
+                        if (data && data.error === 0) {
+                            data.data.forEach(w => {
+                                const o = document.createElement('option');
+                                o.value = w.id;
+                                o.textContent = w.full_name;
+                                if (String(w.id) === String(oldPhuong)) o.selected = true;
+                                phuong.appendChild(o);
+                            });
+                        }
+                    }).catch(() => {});
+            });
+
+            // Trước khi submit, điền tên tỉnh/quận/phường vào hidden inputs
+            const form = document.getElementById('checkout-form');
+            form.addEventListener('submit', function(e) {
+                const tName = tinh.selectedOptions[0]?.text || '';
+                const qName = quan.selectedOptions[0]?.text || '';
+                const pName = phuong.selectedOptions[0]?.text || '';
+                document.getElementById('tinh_name').value = tName;
+                document.getElementById('quan_name').value = qName;
+                document.getElementById('phuong_name').value = pName;
+                // tiếp tục xử lý validation/loading như hiện tại...
             });
         });
     </script>

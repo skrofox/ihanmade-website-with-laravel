@@ -36,6 +36,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout/success/{order}', [WebController::class, 'checkoutSuccess'])->name('checkout.success');
     //
     Route::get('order/', [WebController::class, 'order'])->name('order.index');
+    Route::get('/orders/show/{id}', [WebController::class, 'orders_show'])->name('orders.show');
+    Route::put('/orders-cancel/{id}', [WebController::class, 'orders_cancel'])->name('orders.cancel');
+
+    Route::post('/user-updateName', [WebController::class, 'updateName'])->name('user.updateName');
+    Route::post('/user-changePassword', [WebController::class, 'changePassword'])->name('user.changePassword');
+    Route::put('/user-address-setDefault/{id}', [WebController::class, 'user_address_setDefault'])->name('user.address.setDefault');
+    Route::post('user-address-store', [WebController::class, 'add_address'])->name('user.address.store');
+    Route::delete('user-address-delete/{id}', [WebController::class, 'address_delete'])->name('user.address.delete');
 });
 
 Route::prefix('admin')->middleware(['auth', 'role'])->group(function () {

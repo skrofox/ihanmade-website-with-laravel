@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderPlaced;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Category;
@@ -15,13 +16,16 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class WebController extends Controller
 {
     //
 
-    public function account(){
+    public function account()
+    {
         $user = Auth::user();
         $orders = Order::where('user_id', $user->id)->get();
         return view('account', compact('user', 'orders'));
@@ -228,7 +232,7 @@ class WebController extends Controller
     public function checkout()
     {
         $user = User::find(Auth::user()->id);
-        $addresses = $user->addresses;
+        $addresses = Address::where('user_id', $user->id)->where('is_default_shipping', 1);
         $cart = Cart::with(['items.variant', 'items.variant.currentPrice', 'items.variant.product', 'items.variant.product.images', 'items.variant.prices'])
             ->where('user_id', Auth::id())
             ->first();
@@ -237,7 +241,7 @@ class WebController extends Controller
             return redirect()->route('cart.index')->with('error', 'Giỏ hàng trống!');
         }
 
-        return view('checkout', compact('cart', 'addresses'));
+        return view('checkout', compact('cart', 'addresses', 'user'));
     }
 
     public function storeOrder(Request $request)
@@ -249,6 +253,9 @@ class WebController extends Controller
             'address' => 'required|string|max:500',
             'payment_method' => 'required|string|in:cod,momo,bank_transfer,credit_card',
             'notes' => 'nullable|string|max:1000',
+            'tinh_name' => 'required|string',
+            'quan_name' => 'required|string',
+            'phuong_name' => 'required|string',
             'agree_terms' => 'required|accepted'
         ]);
 
@@ -268,12 +275,12 @@ class WebController extends Controller
                 'user_id' => Auth::id(),
                 'full_name' => $request->full_name,
                 'phone' => $request->phone,
-                'line1' => $request->address,
+                'line1' => $request->tinh_name . ', ' . $request->quan_name . ', ' . $request->phuong_name . ', ' . $request->address,
                 'line2' => null,
-                'ward' => null,
-                'district' => null,
-                'city' => null,
-                'province' => null,
+                'ward' => $request->phuong_name,
+                'district' => $request->quan_name,
+                'city' => $request->tinh_name,
+                'province' => $request->tinh_name,
                 'is_default_shipping' => false,
                 'is_default_billing' => false,
             ]);
@@ -315,6 +322,12 @@ class WebController extends Controller
                 ]);
             }
 
+            try {
+                Mail::to($order->email ?: Auth::user()->email)->send(new OrderPlaced($order));
+            } catch (\Throwable $e) {
+                Log::error('Send order email failed: ' . $e->getMessage());
+            }
+
             // Xóa giỏ hàng sau khi đặt hàng thành công
             $cart->items()->delete();
             $cart->delete();
@@ -345,6 +358,41 @@ class WebController extends Controller
     {
         $orders = Order::where('user_id', Auth::id())->orderBy('created_at', 'desc')->paginate(15);
         return view('order', compact('orders'));
+    }
+
+    public function orders_show($id)
+    {
+        $order = Order::with([
+            'user',
+            'shippingAddress',
+            'billingAddress',
+            'items.product',
+            'items.variant'
+        ])->where('id', $id)->where('user_id', Auth::user()->id)->first();
+        if (!$order) {
+            abort(404, 'Page Not Found!');
+        }
+        return view('order', compact('order'));
+    }
+
+    public function orders_cancel(Request $request, $id)
+    {
+        $order = Order::where('user_id', Auth::id())->where('id', $id)->first();
+
+        if (!$order) {
+            abort(404, 'Page Not Found!');
+        }
+
+        $request->validate([
+            'reason' => 'required|string'
+        ]);
+
+        $order->cancel_reason = $request->reason;
+
+        $order->status = 'cancelled';
+        $order->save();
+
+        return redirect()->back()->with('success', 'Đơn hàng đã được hủy.');
     }
 
     public function removeCartItem($id)
@@ -398,5 +446,98 @@ class WebController extends Controller
             $products = Product::paginate(12);
         }
         return view('categories', compact('categories', 'products'));
+    }
+
+    public function updateName(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'name' => 'required|max:50'
+        ]);
+
+        $user->update([
+            'name' => $request->input('name')
+        ]);
+
+        $user->save();
+
+        return back();
+    }
+
+    public function changePassword(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8',
+            'new_password_confirmation' => 'required|same:new_password',
+        ], [
+            'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại.',
+            'new_password.required' => 'Vui lòng nhập mật khẩu mới.',
+            'new_password.min' => 'Mật khẩu mới phải có ít nhất :min ký tự.',
+            'new_password_confirmation.required' => 'Vui lòng xác nhận mật khẩu mới.',
+            'new_password_confirmation.same' => 'Mật khẩu xác nhận không khớp.',
+        ]);
+
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng']);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return back()->with('success', 'Đổi mật khẩu thành công.');
+    }
+
+    public function user_address_setDefault($id)
+    {
+        $user = Auth::user();
+
+        $address = Address::where('user_id', $user->id)->where('id', $id)->first();
+        $addresses = Address::where('user_id', $user->id)->update(['is_default_shipping' =>  0]);
+
+        $address->update([
+            'is_default_shipping' => 1,
+        ]);
+
+        $address->save();
+
+        return back();
+    }
+    public function add_address(Request $request)
+    {
+        $request->validate([
+            'fullname' => 'required',
+            'phone' => 'required|numeric',
+            'line1' => 'required'
+        ]);
+
+        $user = Auth::user();
+        if ($user->addresses->count() < 2) {
+            Address::create([
+                'user_id' => Auth::user()->id,
+                'full_name' => $request->input('fullname'),
+                'phone' => $request->input('phone'),
+                'line1' => $request->input('line1'),
+                'is_default_shipping' => 1,
+            ]);
+        } else {
+            Address::create([
+                'user_id' => Auth::user()->id,
+                'full_name' => $request->input('fullname'),
+                'phone' => $request->input('phone'),
+                'line1' => $request->input('line1'),
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Thêm địa chỉ mới thành công');
+    }
+    public function address_delete($id)
+    {
+        Address::where("id", $id)->where('user_id', Auth::user()->id)->delete();
+        return redirect()->back();
     }
 }
