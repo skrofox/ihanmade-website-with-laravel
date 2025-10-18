@@ -344,7 +344,7 @@ class WebController extends Controller
 
 
             DB::commit();
-g
+
             return redirect()->route('checkout.success', $order)->with('success', 'Đặt hàng thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
