@@ -8,7 +8,6 @@
         
         <form action="{{ route('variant_store') }}" method="POST" class="space-y-6">
             @csrf
-            
             <!-- Chọn sản phẩm -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -44,7 +43,7 @@
             </div>
 
             <!-- Barcode -->
-            <div>
+            {{-- <div>
                 <label for="barcode" class="block text-sm font-medium text-gray-700 mb-2">
                     Mã vạch
                 </label>
@@ -54,7 +53,7 @@
                 @error('barcode')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
-            </div>
+            </div> --}}
 
             <!-- Option Values -->
             <div>
@@ -75,6 +74,16 @@
                 </button>
                 <p class="text-sm text-gray-500 mt-1">VD: Màu sắc: Đỏ, Kích thước: L</p>
                 @error('option_value')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+                    Giá bán
+                </label>
+                <input type="number" name="price" id="price" min="0" required value="{{ old('price') }}" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+                @error('price')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>

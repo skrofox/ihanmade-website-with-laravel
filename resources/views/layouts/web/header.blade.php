@@ -9,7 +9,7 @@
         <div class="flex lg:flex-1">
             <a href="/" class="-m-1.5 p-1.5">
                 <span class="sr-only">Ihandmade</span>
-                <svg class="w-40 h-8" viewBox="0 0 164 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {{-- <svg class="w-40 h-8" viewBox="0 0 164 33" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M47 24.7231V7H54.4171C54.5916 7 54.816 7.00821 55.0903 7.02462C55.3645 7.03282 55.618 7.05744 55.8507 7.09846C56.8895 7.25436 57.7455 7.59487 58.4186 8.12C59.1001 8.64513 59.6029 9.30974 59.927 10.1138C60.2594 10.9097 60.4256 11.7959 60.4256 12.7723C60.4256 13.7405 60.2594 14.6267 59.927 15.4308C59.5945 16.2267 59.0876 16.8872 58.4061 17.4123C57.733 17.9374 56.8812 18.2779 55.8507 18.4338C55.618 18.4667 55.3604 18.4913 55.0778 18.5077C54.8035 18.5241 54.5833 18.5323 54.4171 18.5323H50.0042V24.7231H47ZM50.0042 15.7631H54.2925C54.4587 15.7631 54.6457 15.7549 54.8534 15.7385C55.0612 15.7221 55.2523 15.6892 55.4268 15.64C55.9255 15.5169 56.3161 15.2995 56.5986 14.9877C56.8895 14.6759 57.0931 14.3231 57.2094 13.9292C57.3341 13.5354 57.3964 13.1497 57.3964 12.7723C57.3964 12.3949 57.3341 12.0092 57.2094 11.6154C57.0931 11.2133 56.8895 10.8564 56.5986 10.5446C56.3161 10.2328 55.9255 10.0154 55.4268 9.89231C55.2523 9.84308 55.0612 9.81436 54.8534 9.80615C54.6457 9.78974 54.4587 9.78154 54.2925 9.78154H50.0042V15.7631Z"
                         fill="#111827" />
@@ -41,18 +41,19 @@
                         d="M0 4.54673C0 2.03564 2.07211 0 4.62819 0H21.5399V0.00124069C28.9908 0.0998525 35 6.06429 35 13.4075C35 20.8123 28.8897 26.8151 21.3523 26.8151C18.6648 26.8151 16.1587 26.052 14.0463 24.7342L6.58815 31.9057C4.13431 34.2652 0 32.5573 0 29.1841V4.54673ZM11.5194 22.7055C9.15709 20.295 7.70452 17.0179 7.70452 13.4075C7.70452 12.5277 8.43056 11.8144 9.32619 11.8144C10.2218 11.8144 10.9479 12.5277 10.9479 13.4075C10.9479 19.0526 15.6061 23.6288 21.3523 23.6288C27.0985 23.6288 31.7567 19.0526 31.7567 13.4075C31.7567 7.76248 27.0985 3.18626 21.3523 3.18626H4.62819C3.86336 3.18626 3.24334 3.79536 3.24334 4.54673V29.1841C3.24334 29.7351 3.91866 30.014 4.31948 29.6286L11.5194 22.7055Z"
                         fill="url(#paint1_linear_9129_4680)" />
                     <defs>
-                        <linearGradient id="paint0_linear_9129_4680" x1="35" y1="1.89063" x2="1.11152" y2="33.4573"
-                            gradientUnits="userSpaceOnUse">
+                        <linearGradient id="paint0_linear_9129_4680" x1="35" y1="1.89063" x2="1.11152"
+                            y2="33.4573" gradientUnits="userSpaceOnUse">
                             <stop stop-color="#7C3AED" />
                             <stop offset="0.993738" stop-color="#4F46E5" />
                         </linearGradient>
-                        <linearGradient id="paint1_linear_9129_4680" x1="35" y1="1.89063" x2="1.11152" y2="33.4573"
-                            gradientUnits="userSpaceOnUse">
+                        <linearGradient id="paint1_linear_9129_4680" x1="35" y1="1.89063" x2="1.11152"
+                            y2="33.4573" gradientUnits="userSpaceOnUse">
                             <stop stop-color="#7C3AED" />
                             <stop offset="0.993738" stop-color="#4F46E5" />
                         </linearGradient>
                     </defs>
-                </svg>
+                </svg> --}}
+                <img class="w-12 h-12" src="{{ asset('logo.png') }}" alt="">
             </a>
         </div>
         <div class="flex lg:hidden">
@@ -67,164 +68,31 @@
             </button>
         </div>
         <el-popover-group class="hidden lg:flex lg:gap-x-12 items-center">
-            <a href="{{ route('home') }}" class="text-sm/6 font-semibold text-white">Home</a>
-            <div class="relative">
-                <button popovertarget="desktop-menu-product"
-                    class="flex items-center gap-x-1 text-sm/6 font-semibold text-white">
-                    Product
-                    <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true"
-                        class="size-5 flex-none text-gray-500">
-                        <path
-                            d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                            clip-rule="evenodd" fill-rule="evenodd" />
-                    </svg>
-                </button>
-
-                <el-popover id="desktop-menu-product" anchor="bottom" popover
-                    class="w-screen max-w-md overflow-hidden rounded-3xl bg-gray-800 outline-1 -outline-offset-1 outline-white/10 transition transition-discrete [--anchor-gap:--spacing(3)] backdrop:bg-transparent open:block data-closed:translate-y-1 data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-150 data-leave:ease-in">
-                    <div class="p-4">
-                        <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-white/5">
-                            <div
-                                class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-700/50 group-hover:bg-gray-700">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                                    data-slot="icon" aria-hidden="true"
-                                    class="size-6 text-gray-400 group-hover:text-white">
-                                    <path d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                    <path d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                </svg>
-                            </div>
-                            <div class="flex-auto">
-                                <a href="#" class="block font-semibold text-white">
-                                    Analytics
-                                    <span class="absolute inset-0"></span>
-                                </a>
-                                <p class="mt-1 text-gray-400">Get a better understanding of your traffic</p>
-                            </div>
-                        </div>
-                        <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-white/5">
-                            <div
-                                class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-700/50 group-hover:bg-gray-700">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                                    data-slot="icon" aria-hidden="true"
-                                    class="size-6 text-gray-400 group-hover:text-white">
-                                    <path
-                                        d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </div>
-                            <div class="flex-auto">
-                                <a href="#" class="block font-semibold text-white">
-                                    Engagement
-                                    <span class="absolute inset-0"></span>
-                                </a>
-                                <p class="mt-1 text-gray-400">Speak directly to your customers</p>
-                            </div>
-                        </div>
-                        <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-white/5">
-                            <div
-                                class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-700/50 group-hover:bg-gray-700">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                                    data-slot="icon" aria-hidden="true"
-                                    class="size-6 text-gray-400 group-hover:text-white">
-                                    <path
-                                        d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </div>
-                            <div class="flex-auto">
-                                <a href="#" class="block font-semibold text-white">
-                                    Security
-                                    <span class="absolute inset-0"></span>
-                                </a>
-                                <p class="mt-1 text-gray-400">Your customers’ data will be safe and secure</p>
-                            </div>
-                        </div>
-                        <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-white/5">
-                            <div
-                                class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-700/50 group-hover:bg-gray-700">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                                    data-slot="icon" aria-hidden="true"
-                                    class="size-6 text-gray-400 group-hover:text-white">
-                                    <path
-                                        d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </div>
-                            <div class="flex-auto">
-                                <a href="#" class="block font-semibold text-white">
-                                    Integrations
-                                    <span class="absolute inset-0"></span>
-                                </a>
-                                <p class="mt-1 text-gray-400">Connect with third-party tools</p>
-                            </div>
-                        </div>
-                        <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-white/5">
-                            <div
-                                class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-700/50 group-hover:bg-gray-700">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                                    data-slot="icon" aria-hidden="true"
-                                    class="size-6 text-gray-400 group-hover:text-white">
-                                    <path
-                                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </div>
-                            <div class="flex-auto">
-                                <a href="#" class="block font-semibold text-white">
-                                    Automations
-                                    <span class="absolute inset-0"></span>
-                                </a>
-                                <p class="mt-1 text-gray-400">Build strategic funnels that will convert</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 divide-x divide-white/10 bg-gray-700/50">
-                        <a href="#"
-                            class="flex items-center justify-center gap-x-2.5 p-3 text-sm/6 font-semibold text-white hover:bg-gray-700/50">
-                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true"
-                                class="size-5 flex-none text-gray-500">
-                                <path
-                                    d="M2 10a8 8 0 1 1 16 0 8 8 0 0 1-16 0Zm6.39-2.908a.75.75 0 0 1 .766.027l3.5 2.25a.75.75 0 0 1 0 1.262l-3.5 2.25A.75.75 0 0 1 8 12.25v-4.5a.75.75 0 0 1 .39-.658Z"
-                                    clip-rule="evenodd" fill-rule="evenodd" />
-                            </svg>
-                            Watch demo
-                        </a>
-                        <a href="#"
-                            class="flex items-center justify-center gap-x-2.5 p-3 text-sm/6 font-semibold text-white hover:bg-gray-700/50">
-                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true"
-                                class="size-5 flex-none text-gray-500">
-                                <path
-                                    d="M2 3.5A1.5 1.5 0 0 1 3.5 2h1.148a1.5 1.5 0 0 1 1.465 1.175l.716 3.223a1.5 1.5 0 0 1-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 0 0 6.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 0 1 1.767-1.052l3.223.716A1.5 1.5 0 0 1 18 15.352V16.5a1.5 1.5 0 0 1-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 0 1 2.43 8.326 13.019 13.019 0 0 1 2 5V3.5Z"
-                                    clip-rule="evenodd" fill-rule="evenodd" />
-                            </svg>
-                            Contact sales
-                        </a>
-                    </div>
-                </el-popover>
-            </div>
-
-            <a href="#" class="text-sm/6 font-semibold text-white">Marketplace</a>
-            <a href="#" class="text-sm/6 font-semibold text-white">Benevolent</a>
+            <a href="{{ route('home') }}" class="text-sm/6 font-semibold text-white">Trang chủ</a>
+            <a href="{{ route('categories') }}" class="text-sm/6 font-semibold text-white">Danh mục</a>
+            {{-- <a href="#" class="text-sm/6 font-semibold text-white">Sản phẩm</a> --}}
+            <a href="#" class="text-sm/6 font-semibold text-white">Thiện Nguyện</a>
             <div class="relative text-gray-600">
-                <input type="search" name="search" id="search" placeholder="Search"
-                    class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none">
-                <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
-                    <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
-                        viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;"
-                        xml:space="preserve" width="512px" height="512px">
-                        <path
-                            d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
-                    </svg>
-                </button>
+                <form action="{{ route('search') }}" method="get">
+                    <input type="search" name="query" id="search" placeholder="Search"
+                        class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none">
+                    <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
+                        <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
+                            viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;"
+                            xml:space="preserve" width="512px" height="512px">
+                            <path
+                                d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                        </svg>
+                    </button>
+                </form>
             </div>
         </el-popover-group>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-            @if (Auth::user())
-                <div class="relative group">
-                    <button type="button" class="flex items-center text-sm/6 font-semibold text-white focus:outline-none"
+            <div class="relative group">
+                @if (Auth::check())
+                    <button type="button"
+                        class="flex items-center text-sm/6 font-semibold text-white focus:outline-none"
                         id="user-menu-button">
                         <svg class="w-6 h-6 mr-2 text-white" fill="none" stroke="currentColor" stroke-width="1.5"
                             viewBox="0 0 24 24">
@@ -237,27 +105,30 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
+                @endif
+                @auth
                     <div class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-[#1f2937] rounded-md shadow-lg z-50 py-2 text-white"
                         id="user-dropdown-menu">
-                        <a href="{{ route('profile.update') }}" class="block px-4 py-2 hover:bg-[#253040]">Profile</a>
-                        <a href="" class="block px-4 py-2 hover:bg-[#253040]">Đơn hàng</a>
+                        <a href="{{ route('account') }}" class="block px-4 py-2 hover:bg-[#253040]">Tài khoản</a>
+                        <a href="{{ route('cart.index') }}" class="block px-4 py-2 hover:bg-[#253040]">Giỏ hàng</a>
+                        {{-- <a href="{{ route('order.index') }}" class="block px-4 py-2 hover:bg-[#253040]">Đơn hàng</a> --}}
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-[#253040]">Log out</button>
+                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-[#253040]">Đăng
+                                xuất</button>
                         </form>
                     </div>
-                </div>
-
-            @else
+                @endauth
+            </div>
+            @guest
                 <div class="max-w-max">
 
-                    <a href="{{ route('login') }}" class="text-sm/6 font-semibold text-white">Log in
+                    <a href="{{ route('login') }}" class="text-sm/6 font-semibold text-white">Đăng nhập
                         <span aria-hidden="true" class="px-1">|</span>
                     </a>
-                    <a href="{{ route('register') }}" class="text-sm/6 font-semibold text-white">Register</a>
-
+                    <a href="{{ route('register') }}" class="text-sm/6 font-semibold text-white">Đăng ký</a>
                 </div>
-            @endif
+            @endguest
         </div>
     </nav>
     <el-dialog>
@@ -284,69 +155,44 @@
                         <div class="-my-6 divide-y divide-white/10">
                             <div class="space-y-2 py-6">
                                 <div class="relative text-gray-600 flex">
-                                    <input type="search" name="search" id="search" placeholder="Search"
-                                        class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full">
-                                    <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
-                                        <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px"
-                                            y="0px" viewBox="0 0 56.966 56.966"
-                                            style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve"
-                                            width="512px" height="512px">
-                                            <path
-                                                d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
-                                        </svg>
-                                    </button>
+                                    <form action="{{ route('search') }}" method="get">
+                                        <input type="text" name="query" id="search" placeholder="Search"
+                                            class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full">
+                                        <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
+                                            <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                                xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                id="Capa_1" x="0px" y="0px" viewBox="0 0 56.966 56.966"
+                                                style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve"
+                                                width="512px" height="512px">
+                                                <path
+                                                    d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                                            </svg>
+                                        </button>
+                                    </form>
                                 </div>
-                                <div class="-mx-3">
-                                    <button type="button" command="--toggle" commandfor="products"
-                                        class="flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-white hover:bg-white/5">
-                                        Product
-                                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true"
-                                            class="size-5 flex-none in-aria-expanded:rotate-180">
-                                            <path
-                                                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                                                clip-rule="evenodd" fill-rule="evenodd" />
-                                        </svg>
-                                    </button>
-                                    <el-disclosure id="products" hidden class="mt-2 block space-y-2">
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-white hover:bg-white/5">Analytics</a>
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-white hover:bg-white/5">Engagement</a>
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-white hover:bg-white/5">Security</a>
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-white hover:bg-white/5">Integrations</a>
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-white hover:bg-white/5">Automations</a>
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-white hover:bg-white/5">Watch
-                                            demo</a>
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-white hover:bg-white/5">Contact
-                                            sales</a>
-                                    </el-disclosure>
-                                </div>
+                                <a href="{{ route('cart.index') }}"
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Giỏ
+                                    hàng</a>
+                                {{-- <a href="#"
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Sản
+                                    phẩm</a> --}}
                                 <a href="#"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Features</a>
-                                <a href="#"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Marketplace</a>
-                                <a href="#"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Company</a>
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Thiện
+                                    nguyện</a>
                             </div>
                             <div class="py-6">
-                                @if(Auth::user())
+                                @if (Auth::user())
                                     <form action="{{ route('logout') }}" method="post">
                                         @csrf
                                         <button type="submit"
-                                            class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">Log
-                                            out
+                                            class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">Đăng
+                                            xuất
                                         </button>
                                     </form>
                                 @else
                                     <a href="{{ route('login') }}"
                                         class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">
-                                        Log in
+                                        Đăng nhập
                                     </a>
                                 @endif
                             </div>
@@ -357,28 +203,30 @@
         </dialog>
     </el-dialog>
 </header>
-<script>
-    // Hiển thị dropdown khi click, ẩn khi click ra ngoài
-    document.addEventListener('DOMContentLoaded', function () {
-        const btn = document.getElementById('user-menu-button');
-        const menu = document.getElementById('user-dropdown-menu');
-        let open = false;
+@push('scripts')
+    <script>
+        // Hiển thị dropdown khi click, ẩn khi click ra ngoài
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('user-menu-button');
+            const menu = document.getElementById('user-dropdown-menu');
+            let open = false;
 
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            open = !open;
-            if (open) {
-                menu.classList.remove('hidden');
-            } else {
-                menu.classList.add('hidden');
-            }
-        });
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                open = !open;
+                if (open) {
+                    menu.classList.remove('hidden');
+                } else {
+                    menu.classList.add('hidden');
+                }
+            });
 
-        document.addEventListener('click', function (e) {
-            if (!btn.contains(e.target) && !menu.contains(e.target)) {
-                menu.classList.add('hidden');
-                open = false;
-            }
+            document.addEventListener('click', function(e) {
+                if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.add('hidden');
+                    open = false;
+                }
+            });
         });
-    });
-</script>
+    </script>
+@endpush

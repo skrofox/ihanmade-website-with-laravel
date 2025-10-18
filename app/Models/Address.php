@@ -18,12 +18,10 @@ class Address extends Model
         'province',
         'country_code',
         'is_default_shipping',
-        'is_default_billing',
     ];
 
     protected $casts = [
         'is_default_shipping' => 'boolean',
-        'is_default_billing' => 'boolean',
     ];
 
     public function user()
@@ -31,13 +29,13 @@ class Address extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'shipping_address_id');
+    }
+
     public function scopeDefaultShipping($query)
     {
         return $query->where('is_default_shipping', true);
-    }
-
-    public function scopeDefaultBilling($query)
-    {
-        return $query->where('is_default_billing', true);
     }
 }

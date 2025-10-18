@@ -16,8 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users');
             $table->string('email', 150);
-            $table->foreignId('billing_address_id')->nullable()->constrained('addresses');
-            $table->foreignId('shipping_address_id')->nullable()->constrained('addresses');
+            $table->foreignId('shipping_address_id')->nullable()->constrained('addresses')->onDelete("set null");
             $table->enum('status', ['placed','paid','fulfilling','shipped','completed','cancelled'])->default('placed');
             $table->decimal('subtotal', 12, 2)->default(0);
             $table->decimal('discount_total', 12, 2)->default(0);
@@ -28,6 +27,7 @@ return new class extends Migration
             $table->dateTime('paid_at')->nullable();
             $table->dateTime('cancelled_at')->nullable();
             $table->string('cancel_reason', 255)->nullable();
+            $table->mediumText('notes')->nullable();
             $table->timestamps();
         });
     }

@@ -19,6 +19,7 @@ class StockItemsController extends Controller
         $search = $request->input('keyword');
         $warehouse = $request->input('warehouse');
         $stockLevel = $request->input('stock_level');
+        $product_variants = ProductVariant::orderByDesc('created_at')->get();
 
         $query = StockItem::with(['warehouse', 'variant.product']);
 
@@ -56,7 +57,7 @@ class StockItemsController extends Controller
             'out' => 'Hết hàng'
         ];
 
-        return view('admin.page.stock_items.index', compact('stockItems', 'warehouses', 'stockLevels'));
+        return view('admin.page.stock_items.index', compact('stockItems', 'product_variants', 'warehouses', 'stockLevels'));
     }
 
     /**
@@ -65,8 +66,8 @@ class StockItemsController extends Controller
     public function create()
     {
         $warehouses = WareHouse::all();
-        $variants = ProductVariant::with('product')->active()->get();
-        
+        $variants = ProductVariant::with('product')->doesntHave('stockItems')->orderByDesc('created_at')->active()->get();
+
         return view('admin.page.stock_items.create', compact('warehouses', 'variants'));
     }
 
@@ -133,7 +134,7 @@ class StockItemsController extends Controller
     public function show(string $id)
     {
         $stockItem = StockItem::with(['warehouse', 'variant.product'])->findOrFail($id);
-        
+
         return view('admin.page.stock_items.show', compact('stockItem'));
     }
 
@@ -145,7 +146,7 @@ class StockItemsController extends Controller
         $stockItem = StockItem::findOrFail($id);
         $warehouses = WareHouse::all();
         $variants = ProductVariant::with('product')->active()->get();
-        
+
         return view('admin.page.stock_items.edit', compact('stockItem', 'warehouses', 'variants'));
     }
 
@@ -274,7 +275,7 @@ class StockItemsController extends Controller
         ]);
 
         $stockItem = StockItem::findOrFail($id);
-        
+
         if ($request->type === 'subtract' && $stockItem->on_hand < $request->quantity) {
             return response()->json([
                 'success' => false,
@@ -303,7 +304,7 @@ class StockItemsController extends Controller
         ]);
 
         $stockItem = StockItem::findOrFail($id);
-        
+
         if (!$stockItem->reserveStock($request->quantity)) {
             return response()->json([
                 'success' => false,
@@ -330,7 +331,7 @@ class StockItemsController extends Controller
         ]);
 
         $stockItem = StockItem::findOrFail($id);
-        
+
         if (!$stockItem->releaseReservedStock($request->quantity)) {
             return response()->json([
                 'success' => false,

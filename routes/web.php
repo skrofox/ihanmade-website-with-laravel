@@ -10,19 +10,48 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Web\WebController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\WareHouseController;
+use App\Http\Controllers\Admin\OrderController;
 
 Route::get('/', [WebController::class, 'index'])->name('home');
+Route::get('/search', [WebController::class, 'search'])->name('search');
+Route::post('add-to-cart', [WebController::class, 'addToCart'])->name('add_to_cart');
 Route::get('/detail-product/{slug}', [WebController::class, 'detail'])->name('detail');
+Route::get('/product/variant/{id}', [WebController::class, 'info_variant'])->name('product.variant');
+Route::get('/categories', [WebController::class, 'categories'])->name('categories');
+// Route::middleware(['auth', 'roleUser'])->group(function () {
+// });
+Route::middleware('auth')->group(function () {
+    Route::get('/account', [WebController::class, 'account'])->name('account');
 
-Route::middleware(['auth', 'roleUser'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    //
+    Route::get('/cart', [WebController::class, 'cart'])->name('cart.index');
+    Route::put('/cart/update/{id}', [WebController::class, 'updateCart'])->name('cart.update');
+    Route::delete('/cart/remove/{id}', [WebController::class, 'removeCartItem'])->name('cart.remove');
+    //
+    Route::get('/checkout', [WebController::class, 'checkout'])->name('checkout.index');
+    Route::post('/checkout', [WebController::class, 'storeOrder'])->name('checkout.store');
+    Route::get('/checkout/success/{order}', [WebController::class, 'checkoutSuccess'])->name('checkout.success');
+    //
+    Route::get('order/', [WebController::class, 'order'])->name('order.index');
+    Route::get('/orders/show/{id}', [WebController::class, 'orders_show'])->name('orders.show');
+    Route::put('/orders-cancel/{id}', [WebController::class, 'orders_cancel'])->name('orders.cancel');
+    Route::put('order/completed', [WebController::class, 'order_completed'])->name('order.completed');
 
+    Route::post('/user-updateName', [WebController::class, 'updateName'])->name('user.updateName');
+    Route::post('/user-changePassword', [WebController::class, 'changePassword'])->name('user.changePassword');
+    Route::put('/user-address-setDefault/{id}', [WebController::class, 'user_address_setDefault'])->name('user.address.setDefault');
+    Route::post('user-address-store', [WebController::class, 'add_address'])->name('user.address.store');
+    Route::delete('user-address-delete/{id}', [WebController::class, 'address_delete'])->name('user.address.delete');
 });
 
 Route::prefix('admin')->middleware(['auth', 'role'])->group(function () {
     //Admin route
     Route::get('/', [AdminController::class, 'index'])->name('admin_home');
     //User admin route
-    Route::prefix('user')->name('user_')->group(function () {
+    Route::prefix('/user')->name('user_')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
         Route::get('/create', [UserController::class, 'create'])->name('create');
@@ -55,7 +84,7 @@ Route::prefix('admin')->middleware(['auth', 'role'])->group(function () {
         Route::delete('/{id}', [ProductController::class, 'destroy'])->name('destroy');
         Route::get('/trash', [ProductController::class, 'trash'])->name('trash');
         Route::post('/trash/{id}', [ProductController::class, 'restore'])->name('restore');
-        
+
         // Routes cho quản lý hình ảnh
         Route::post('/{id}/add-images', [ProductController::class, 'addImages'])->name('add_images');
         Route::delete('/{productId}/image/{imageId}', [ProductController::class, 'deleteImage'])->name('delete_image');
@@ -99,11 +128,22 @@ Route::prefix('admin')->middleware(['auth', 'role'])->group(function () {
         Route::post('/trash/{id}', [StockItemsController::class, 'restore'])->name('restore');
         Route::delete('/trash/{id}', [StockItemsController::class, 'forceDelete'])->name('force_delete');
         Route::get('/search', [StockItemsController::class, 'search'])->name('search');
-        
+
         // AJAX routes for stock management
         Route::post('/{id}/adjust-stock', [StockItemsController::class, 'adjustStock'])->name('adjust_stock');
         Route::post('/{id}/reserve-stock', [StockItemsController::class, 'reserveStock'])->name('reserve_stock');
         Route::post('/{id}/release-reserved', [StockItemsController::class, 'releaseReservedStock'])->name('release_reserved');
+    });
+
+    //Order route
+    Route::prefix('order')->name('order_')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/pending', [OrderController::class, 'pending'])->name('pending');
+        Route::get('/processing', [OrderController::class, 'processing'])->name('processing');
+        Route::get('/search', [OrderController::class, 'search'])->name('search');
+        Route::get('/detail/{id}', [OrderController::class, 'show'])->name('detail');
+        Route::put('/update-status/{id}', [OrderController::class, 'updateStatus'])->name('update_status');
+        Route::delete('/{id}', [OrderController::class, 'destroy'])->name('destroy');
     });
 });
 
@@ -111,10 +151,6 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+
 
 require __DIR__ . '/auth.php';

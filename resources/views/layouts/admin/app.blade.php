@@ -54,7 +54,7 @@
                         </li>
                         <li>
                             <a class="nav-sublink {{ request()->routeIs('user_trash') ? 'active-sub' : '' }}"
-                                href="{{ route('user_trash') }}">User Trash</a>
+                                href="{{ route('user_trash') }}">User lock list</a>
                         </li>
                     </ul>
                 </details>
@@ -185,9 +185,36 @@
                             <a class="nav-sublink {{ request()->routeIs('stock_create') ? 'active-sub' : '' }}"
                                 href="{{ route('stock_create') }}">Add Stock Item</a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a class="nav-sublink {{ request()->routeIs('stock_trash') ? 'active-sub' : '' }}"
                                 href="{{ route('stock_trash') }}">Stock Items Trash</a>
+                        </li> --}}
+                    </ul>
+                </details>
+
+                <details class="menu-collapse" {{ request()->routeIs('order_*') ? 'open' : '' }}>
+                    <summary
+                        class="nav-link flex items-center justify-between cursor-pointer {{ request()->routeIs('order_*') ? 'active' : '' }}">
+                        Orders
+                        {{-- Chevron --}}
+                        <svg class="h-4 w-4 menu-chevron" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path
+                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.117l3.71-3.886a.75.75 0 111.08 1.04l-4.24 4.44a.75.75 0 01-1.08 0l-4.24-4.44a.75.75 0 01.02-1.06z" />
+                        </svg>
+                    </summary>
+
+                    <ul class="mt-1 ml-2 flex flex-col gap-1">
+                        <li>
+                            <a class="nav-sublink {{ request()->routeIs('order_index') ? 'active-sub' : '' }}"
+                                href="{{ route('order_index') }}">List Orders</a>
+                        </li>
+                        <li>
+                            <a class="nav-sublink {{ request()->routeIs('order_pending') ? 'active-sub' : '' }}"
+                                href="{{ route('order_pending') }}">Pending Orders</a>
+                        </li>
+                        <li>
+                            <a class="nav-sublink {{ request()->routeIs('order_processing') ? 'active-sub' : '' }}"
+                                href="{{ route('order_processing') }}">Processing Orders</a>
                         </li>
                     </ul>
                 </details>

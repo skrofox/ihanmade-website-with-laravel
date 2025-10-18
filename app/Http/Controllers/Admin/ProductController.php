@@ -43,7 +43,7 @@ class ProductController extends Controller
         $categories = Category::all();
         return view("admin.page.product.create_product", compact("categories"));
     }
-    
+
     public function store(Request $request)
     {
         $request->validate([
@@ -55,17 +55,17 @@ class ProductController extends Controller
             "categories.*" => "exists:categories,id",
             "images.*" => "image|mimes:jpg,jpeg,png,gif,webp|max:2048",
         ]);
-        
+
         $product = Product::create(
             [
                 "name" => $request->name,
                 'description' => $request->description,
-                'slug' => Str::slug(Str::title($request->name)),
+                'slug' => Str::slug(Str::title($request->name)) . '-' . uniqid(),
                 'brand' => $request->brand,
                 'status' => $request->status,
             ]
         );
-        
+
         $product->categories()->sync($request->categories);
 
         // Xử lý hình ảnh
@@ -73,7 +73,7 @@ class ProductController extends Controller
             foreach ($request->file('images') as $index => $image) {
                 $imageName = time() . '_' . $index . '.' . $image->getClientOriginalExtension();
                 $imagePath = $image->storeAs('products', $imageName, 'public');
-                
+
                 ProductImage::create([
                     'product_id' => $product->id,
                     'url' => $imagePath,
@@ -83,24 +83,24 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('product_create')->with('success', 'Add a new product successful');
+        return redirect()->route('variant_create')->with('success', 'Add a new product successful');
     }
 
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-        
+
         // Xóa hình ảnh trước khi xóa sản phẩm
         foreach ($product->images as $image) {
             Storage::disk('public')->delete($image->url);
             $image->delete();
         }
-        
+
         $product->delete();
 
         return redirect()->route('product_index')->with(['success' => true, 'message' => 'Product deleted successfully.']);
     }
-    
+
     public function trash()
     {
         $products = Product::onlyTrashed()->paginate(10);
@@ -132,15 +132,15 @@ class ProductController extends Controller
         ]);
 
         $product = Product::findOrFail($id);
-        
+
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
                 $imageName = time() . '_' . $index . '.' . $image->getClientOriginalExtension();
                 $imagePath = $image->storeAs('products', $imageName, 'public');
-                
+
                 // Lấy vị trí cao nhất hiện tại
                 $maxPosition = $product->images()->max('position') ?? -1;
-                
+
                 ProductImage::create([
                     'product_id' => $product->id,
                     'url' => $imagePath,
@@ -157,12 +157,12 @@ class ProductController extends Controller
     public function deleteImage($productId, $imageId)
     {
         $image = ProductImage::where('product_id', $productId)
-                            ->where('id', $imageId)
-                            ->firstOrFail();
-        
+            ->where('id', $imageId)
+            ->firstOrFail();
+
         // Xóa file từ storage
         Storage::disk('public')->delete($image->url);
-        
+
         // Xóa record từ database
         $image->delete();
 
@@ -178,9 +178,9 @@ class ProductController extends Controller
         ]);
 
         $image = ProductImage::where('product_id', $productId)
-                            ->where('id', $request->image_id)
-                            ->firstOrFail();
-        
+            ->where('id', $request->image_id)
+            ->firstOrFail();
+
         $image->position = $request->position;
         $image->save();
 
@@ -200,7 +200,7 @@ class ProductController extends Controller
 
         return view('admin.page.product', compact('products'));
     }
-    
+
     public function restore($id)
     {
         $product = Product::onlyTrashed()->findOrFail($id);

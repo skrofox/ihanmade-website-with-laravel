@@ -11,8 +11,9 @@ class Category extends Model
     use SoftDeletes;
     protected $fillable = ["name", "slug", "parent_id", "position"];
 
-    public function products(){
-        return $this->belongsToMany(Product::class, 'product_category');
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_category', 'category_id', 'product_id');
     }
     public function parent()
     {
@@ -47,9 +48,9 @@ class Category extends Model
     public function scopeSearch($query, ?string $term)
     {
         if (!$term) return $query;
-        return $query->where(function($q) use ($term) {
+        return $query->where(function ($q) use ($term) {
             $q->where('name', 'like', "%{$term}%")
-              ->orWhere('slug', 'like', "%{$term}%");
+                ->orWhere('slug', 'like', "%{$term}%");
         });
     }
     /* ---------------- Helpers ---------------- */

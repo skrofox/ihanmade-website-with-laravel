@@ -10,7 +10,11 @@ class ProductVariant extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'product_id', 'sku', 'barcode', 'option_value', 'status',
+        'product_id',
+        'sku',
+        'barcode',
+        'option_value',
+        'status',
     ];
 
     protected $casts = [
@@ -21,10 +25,16 @@ class ProductVariant extends Model
         'status' => 'active',
     ];
 
-    public function product(){
+    public function product()
+    {
         return $this->belongsTo(Product::class);
     }
-    
+
+    public function stockItems()
+    {
+        return $this->hasMany(StockItem::class, 'variant_id');
+    }
+
     public function prices()
     {
         return $this->hasMany(Price::class, 'variant_id');
@@ -42,14 +52,14 @@ class ProductVariant extends Model
     public function getOptionValueTextAttribute()
     {
         if (!$this->option_value || !is_array($this->option_value)) {
-            return 'Không có';
+            return 'Mặc định';
         }
-        
+
         $options = [];
         foreach ($this->option_value as $key => $value) {
             $options[] = "$key: $value";
         }
-        
+
         return implode(', ', $options);
     }
 
@@ -80,9 +90,14 @@ class ProductVariant extends Model
     // Scope để tìm kiếm theo SKU hoặc barcode
     public function scopeSearch($query, $search)
     {
-        return $query->where(function($q) use ($search) {
+        return $query->where(function ($q) use ($search) {
             $q->where('sku', 'like', "%{$search}%")
-              ->orWhere('barcode', 'like', "%{$search}%");
+                ->orWhere('barcode', 'like', "%{$search}%");
         });
+    }
+
+    public function getTotalStockAttribute()
+    {
+        return $this->stockItems()->sum('on_hand');
     }
 }
